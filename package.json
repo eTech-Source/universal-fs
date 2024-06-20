@@ -3,8 +3,22 @@
   "version": "1.0.0",
   "description": "Allows a client or server to access the file system in the current codebase or a different one.",
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
-    "test": "npx vitest"
+    "test": "npx vitest",
+    "dev": "npx rollup -cw",
+    "build": "npx rollup -c",
+    "prepare": "husky install",
+    "lint:check": "npx eslint .",
+    "lint:fix": "npx eslint . --fix",
+    "format:check": "npx prettier .",
+    "format:fix": "npx prettier --write"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,astro,mjs,cjs,spec.ts,spec.tsx}": "eslint --cache --fix",
+    "*.{js,css,md,ts,tsx,astro,mjs,cjs}": "prettier --write",
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
   },
   "repository": {
     "type": "git",
@@ -25,6 +39,8 @@
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "eslint": "^9.5.0",
+    "husky": "^9.0.11",
+    "lint-staged": ">=10",
     "prettier": "^3.3.2",
     "rollup-plugin-serve": "^1.1.1",
     "typescript": "^5.5.2",
