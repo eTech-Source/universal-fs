@@ -6,11 +6,12 @@ export default [
     input: "src/index.ts",
     output: [
       {
-        file: "dist/index.mjs",
-        format: "esm",
-      },
-      { file: "dist/index.cjs", format: "cjs" },
+        dir: "dist",
+        format: "esm"
+      }
     ],
-    plugins: [serve({ contentBase: "dist" }), typescript()],
-  },
+    inlineDynamicImports: true,
+    plugins: [serve({contentBase: "dist"}), typescript()],
+    external: ["express"]
+  }
 ];

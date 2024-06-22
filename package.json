@@ -36,6 +36,7 @@
   "homepage": "https://github.com/eTech-Source/universal-fs#readme",
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
+    "@types/express": "^4.17.21",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "eslint": "^9.5.0",
@@ -48,6 +49,7 @@
     "vitest": "^1.6.0"
   },
   "dependencies": {
+    "express": "^4.19.2",
     "tslib": "^2.6.3"
   }
 }
