@@ -1,5 +1,6 @@
 import serve from "rollup-plugin-serve";
 import typescript from "@rollup/plugin-typescript";
+import modify from "rollup-plugin-modify";
 
 export default [
   {
@@ -7,11 +8,20 @@ export default [
     output: [
       {
         dir: "dist",
-        format: "esm"
+        format: "es"
       }
     ],
+
     inlineDynamicImports: true,
-    plugins: [serve({contentBase: "dist"}), typescript()],
+    presserveModules: true,
+    plugins: [
+      serve({contentBase: "dist"}),
+      typescript(),
+      modify({
+        "dotenv.config()": "dotenv.config({path: '../.env'})",
+        ".fs": "../.fs"
+      })
+    ],
     external: ["express"]
   }
 ];
