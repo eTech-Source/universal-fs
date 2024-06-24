@@ -5,6 +5,7 @@ const readFile = ({path, options}: ReadFileParams) => {
   try {
     return fs.readFileSync(path, options);
   } catch (err: any) {
+    console.log(err);
     throw err;
   }
 };
