@@ -1,3 +1,8 @@
+/**
+ * Find a cookie by name
+ * @param cookieName - The name of the cookie
+ * @returns A cookie string or null
+ */
 const getCookie = (cookieName: string): string | null => {
   const name = cookieName + "=";
   const decodedCookie = decodeURIComponent(document.cookie);

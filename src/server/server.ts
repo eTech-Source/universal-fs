@@ -3,6 +3,10 @@ import express from "express";
 import fs from "fs";
 import isJson from "../helpers/isJson";
 
+/**
+ * The function that initilizes the relay file server
+ * @internal
+ */
 const server = () => {
   const app = express();
   const port = 3000;

@@ -1,6 +1,12 @@
 import {isBrowser, isNode} from "browser-or-node";
 import bycrypt from "bcrypt";
 
+/**
+ * The auth function called in init
+ * @param password - The password to protect the files
+ * @see init
+ * @internal
+ */
 const auth = async (password?: string) => {
   if (!process.env.UNIVERSAL_FS_PASSWORD && !password) {
     throw new Error(
