@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "npx vitest",
-    "dev": "npx rollup -cw",
+    "dev": "npx rollup -cw & nodemon dist/index.js",
     "build": "npx rollup -c",
     "prepare": "husky install",
     "lint:check": "npx eslint .",
@@ -36,12 +36,16 @@
   "homepage": "https://github.com/eTech-Source/universal-fs#readme",
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^4.17.21",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "eslint": "^9.5.0",
     "husky": "^9.0.11",
     "lint-staged": ">=10",
     "prettier": "^3.3.2",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-modify": "^3.0.0",
     "rollup-plugin-serve": "^1.1.1",
     "typedoc": "^0.26.2",
     "typescript": "^5.5.2",
@@ -49,6 +53,11 @@
     "vitest": "^1.6.0"
   },
   "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "bcrypt": "^5.1.1",
+    "browser-or-node": "^3.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "tslib": "^2.6.3"
   }
 }

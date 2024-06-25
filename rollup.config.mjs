@@ -1,16 +1,29 @@
 import serve from "rollup-plugin-serve";
 import typescript from "@rollup/plugin-typescript";
+import modify from "rollup-plugin-modify";
+import copy from "rollup-plugin-copy";
 
 export default [
   {
     input: "src/index.ts",
     output: [
       {
-        file: "dist/index.mjs",
-        format: "esm",
-      },
-      { file: "dist/index.cjs", format: "cjs" },
+        dir: "dist",
+        format: "es"
+      }
     ],
-    plugins: [serve({ contentBase: "dist" }), typescript()],
-  },
+
+    inlineDynamicImports: true,
+    presserveModules: true,
+    plugins: [
+      serve({contentBase: "dist"}),
+      typescript(),
+      modify({
+        "dotenv.config()": "dotenv.config({path: '../.env'})",
+        ".fs": "../.fs"
+      }),
+      copy({targets: [{src: "src/server/init.sh", dest: "dist"}]})
+    ],
+    external: ["express"]
+  }
 ];
