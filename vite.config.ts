@@ -1,7 +1,4 @@
 import {defineConfig} from "vite";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 if (!process.env.UNIVERSAL_FS_PASSWORD) {
   throw new Error(

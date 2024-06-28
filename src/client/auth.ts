@@ -1,11 +1,14 @@
 import {isBrowser, isNode} from "browser-or-node";
-import bycrypt from "bcrypt";
+import bcrypt from "bcrypt";
+import getCookie from "../helpers/getCookie";
+import fs from "fs";
 
 /**
  * The auth function called in init
  * @param password - The password to protect the files
  * @see init
  * @internal
+ * @async
  */
 const auth = async (password?: string) => {
   if (!process.env.UNIVERSAL_FS_PASSWORD && !password) {
@@ -18,67 +21,30 @@ const auth = async (password?: string) => {
     throw new Error("A password prop is required in browser environments");
   }
 
+  let response;
+
   if (isBrowser) {
-    const getCookie = (await import("../helpers/getCookie")).default;
-    const token = getCookie("UNIVERSAL_FS_TOKEN");
-    let hashedPassword;
-
-    if (!token) {
-      console.info("No token found, hashing a new one");
-
-      hashedPassword = bycrypt.hashSync(password as string, 10);
-      const now = new Date();
-
-      document.cookie = `UNIVERSAL_FS_TOKEN=${hashedPassword}; expires=${now.setDate(now.getDate() + 2 * 7)}`;
-    }
-
-    // TODO: add correct url
-    const response = await fetch("/", {
+    response = await fetch(getCookie("universal-fs-url") || "", {
       headers: {
-        Authorization: `Bearer ${hashedPassword}`
+        Authorization: `Bearer ${bcrypt.hashSync(password || (process.env.UNIVERSAL_FS_PASSWORD as string), 10)}`
       }
     });
-
-    if (response.status === 401) {
-      console.error("Failed to authenticate. Check your password");
-    } else if (response.status === 200) {
-      console.info("Authenticated");
-    } else if (response.status === 500) {
-      console.info("Something else went wrong. Check your server logs");
-    }
   } else if (isNode) {
-    const fs = await import("fs");
-    let hashedPassword;
-
-    if (!fs.existsSync(".fs")) {
-      fs.mkdirSync(".fs");
-      console.info("No cache found. Creating .fs");
-    }
-
-    if (!fs.existsSync(".fs/token.txt")) {
-      console.info("No token found, hashing a new one");
-      hashedPassword = bycrypt.hashSync(
-        password || (process.env.UNIVERSAL_FS_PASSWORD as string),
-        10
-      );
-
-      fs.writeFileSync(".fs/token.txt", hashedPassword);
-    }
-
-    // TODO: add correct url
-    const response = await fetch("http://localhost:3000/", {
+    response = await fetch(fs.readFileSync(".fs/url.txt", "utf8"), {
       headers: {
-        Authorization: `Bearer ${hashedPassword}`
+        Authorization: `Bearer ${bcrypt.hashSync(password || (process.env.UNIVERSAL_FS_PASSWORD as string), 10)}`
       }
     });
+  } else {
+    throw new Error("Unsupported environment");
+  }
 
-    if (response.status === 401) {
-      console.error("Failed to authenticate. Check your password");
-    } else if (response.status === 200) {
-      console.info("Authenticated");
-    } else if (response.status === 500) {
-      console.info("Something else went wrong. Check your server logs");
-    }
+  if (response.status === 401) {
+    console.error("Failed to authenticate. Check your password");
+  } else if (response.status === 200) {
+    console.info("Authenticated");
+  } else if (response.status === 500) {
+    console.info("Something else went wrong. Check your server logs");
   }
 };
 

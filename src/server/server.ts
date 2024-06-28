@@ -1,40 +1,41 @@
-import bycrypt from "bcrypt";
+import bcrypt from "bcrypt";
 import express from "express";
 import fs from "fs";
 import isJson from "../helpers/isJson";
+import ngrok from "@ngrok/ngrok";
 
 /**
- * The function that initilizes the relay file server
- * @internal
+ * Initialize the relay file server. This MUST be called in a Node.js or similar environment
+ * @async
  */
-const server = () => {
+const initServer = async () => {
   const app = express();
   const port = 3000;
 
   app.use(express.json());
-
   app.use((req, res, next) => {
     if (!process.env.UNIVERSAL_FS_PASSWORD) {
-      throw new Error(
-        "An environment variable UNIVERSAL_FS_PASSWORD is required to protect your files"
-      );
+      return res.status(401).json({
+        success: false,
+        error:
+          "An environment variable UNIVERSAL_FS_PASSWORD is required to protect your files"
+      });
     }
 
     if (!req.headers.authorization) {
-      return res
-        .json({success: false, error: "An Authorization header is required"})
-        .status(401);
+      return res.status(401).json({
+        success: false,
+        error: "An Authorization header is required"
+      });
     }
 
-    if (
-      !bycrypt.compareSync(
-        process.env.UNIVERSAL_FS_PASSWORD,
-        (req.headers.authorization as string).replace(/^Bearer\s/, "")
-      )
-    ) {
-      return res
-        .json({success: false, error: "Unauthorized request"})
-        .status(401);
+    const token = req.headers.authorization.replace(/^Bearer\s/, "");
+
+    if (!bcrypt.compareSync(process.env.UNIVERSAL_FS_PASSWORD, token)) {
+      return res.status(401).json({
+        success: false,
+        error: "Unauthorized request"
+      });
     }
 
     next();
@@ -42,13 +43,15 @@ const server = () => {
 
   app.use((req, res, next) => {
     if (!req.query.method || req.query.method === "") {
-      return res.json({error: "A method is required"}).status(422);
+      return res.status(422).json({
+        error: "A method is required"
+      });
     }
 
     if (req.method === "POST" && !req.body) {
-      return res
-        .json({error: "A body is required on post requests"})
-        .status(422);
+      return res.status(422).json({
+        error: "A body is required on post requests"
+      });
     }
     next();
   });
@@ -68,10 +71,9 @@ const server = () => {
 
         try {
           fileBuffer = fs.readFileSync(req.params.path, fileOptions);
-
           return res.json({success: true, buffer: fileBuffer});
         } catch (err: any) {
-          return res.json({success: false, error: err}).status(500);
+          return res.status(500).json({success: false, error: err});
         }
       case "readdir":
         let dirs: string[] | null = null;
@@ -92,11 +94,12 @@ const server = () => {
           dirs = fs.readdirSync(req.params.path, dirOptions);
           return res.json({success: true, dirs: dirs});
         } catch (err: any) {
-          return res.json({success: false, error: err}).status(500);
+          return res.status(500).json({success: false, error: err});
         }
+        break;
       default:
         // This should never trigger because of the first check
-        return res.json({error: "Method not found"}).status(422);
+        return res.status(422).json({error: "Method not found"});
     }
   });
 
@@ -110,15 +113,13 @@ const server = () => {
 
         try {
           fs.writeFileSync(req.params.path, req.body.contents);
-          return res.json({success: true, message: "File written"});
+          return res.status(200).json({success: true, message: "File written"});
         } catch (err: any) {
-          return res.json({success: false, error: err}).status(500);
+          return res.status(500).json({success: false, error: err});
         }
       case "mkdir":
         let mkdirOptions:
-          | (fs.MakeDirectoryOptions & {
-              recursive?: false | undefined;
-            })
+          | (fs.MakeDirectoryOptions & {recursive?: false | undefined})
           | null = null;
 
         if (isJson(req.headers.options as string)) {
@@ -127,13 +128,15 @@ const server = () => {
 
         try {
           fs.mkdirSync(req.params.path, mkdirOptions);
-          return res.json({success: true, message: "Directory created"});
+          return res
+            .status(200)
+            .json({success: true, message: "Directory created"});
         } catch (err: any) {
-          return res.json({success: false, error: err}).status(500);
+          return res.status(500).json({success: false, error: err});
         }
 
       default:
-        return res.json({error: "Method not found"}).status(422);
+        return res.status(422).json({error: "Method not found"});
     }
   });
 
@@ -142,9 +145,9 @@ const server = () => {
       case "unlink":
         try {
           fs.unlinkSync(req.params.path);
-          return res.json({success: true, message: "File deleted"});
+          return res.status(200).json({success: true, message: "File deleted"});
         } catch (err: any) {
-          return res.json({success: false, error: err}).status(500);
+          return res.status(500).json({success: false, error: err});
         }
       case "rmdir":
         let rmOptions: fs.RmOptions | undefined = undefined;
@@ -155,18 +158,32 @@ const server = () => {
 
         try {
           fs.rmdirSync(req.params.path, rmOptions);
-          return res.json({success: true, message: "Directory deleted"});
+          return res
+            .status(200)
+            .json({success: true, message: "Directory deleted"});
         } catch (err: any) {
-          return res.json({success: false, error: err}).status(500);
+          return res.status(500).json({success: false, error: err});
         }
       default:
-        return res.json({error: "Method not found"}).status(422);
+        return res.status(422).json({error: "Method not found"});
     }
   });
 
   app.listen(port, () => {
-    console.info(`Example app listening on port ${port}`);
+    console.info(`Listening on port ${port}`);
   });
+
+  let listener: ngrok.Listener;
+
+  try {
+    listener = await ngrok.connect({
+      addr: 3000,
+      authtoken: process.env.NGROK_AUTHTOKEN
+    });
+    return listener.url();
+  } catch (err: any) {
+    throw err;
+  }
 };
 
-export default server;
+export default initServer;
