@@ -6,8 +6,9 @@ import ngrok from "@ngrok/ngrok";
 
 /**
  * Initialize the relay file server. This MUST be called in a Node.js or similar environment
+ * @async
  */
-const initServer = () => {
+const initServer = async () => {
   const app = express();
   const port = 3000;
 
@@ -172,11 +173,17 @@ const initServer = () => {
     console.info(`Listening on port ${port}`);
   });
 
-  // ngrok
-  //   .connect({addr: 3000, authtoken: process.env.NGROK_AUTHTOKEN})
-  //   .then((listener) =>
-  //     console.info(`Ingress established at: ${listener.url()}`)
-  //   );
+  let listener: ngrok.Listener;
+
+  try {
+    listener = await ngrok.connect({
+      addr: 3000,
+      authtoken: process.env.NGROK_AUTHTOKEN
+    });
+    return listener.url();
+  } catch (err: any) {
+    throw err;
+  }
 };
 
 export default initServer;
