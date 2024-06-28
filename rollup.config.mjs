@@ -18,10 +18,6 @@ export default [
     plugins: [
       serve({contentBase: "dist"}),
       typescript(),
-      modify({
-        "dotenv.config()": "dotenv.config({path: '../.env'})",
-        ".fs": "../.fs"
-      }),
       copy({targets: [{src: "src/server/init.sh", dest: "dist"}]})
     ],
     external: ["express"]

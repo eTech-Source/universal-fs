@@ -1,16 +1,10 @@
 import auth from "./client/auth";
+import server from "./server/server";
 //@ts-ignore
 import dotenv from "dotenv";
-import {exec} from "child_process";
+import initServer from "./server/server";
 
-dotenv.config();
-
-/**
- * Initialize the relay file server. This MUST be called in a Node.js or similar environment
- */
-const initServer = () => {
-  exec("chmod +x run_node_file.sh & ./init.sh");
-};
+dotenv.config({path: ".env"});
 
 /**
  * Initialize the connection to the relay server. Avabile in most JS environments
@@ -21,4 +15,7 @@ const init = async (password?: string) => {
   await auth(password);
 };
 
-export {init, initServer, auth};
+initServer();
+init();
+
+export {init, initServer, auth, server};
