@@ -5,8 +5,9 @@ import isJson from "../helpers/isJson";
 import ngrok from "@ngrok/ngrok";
 
 /**
- * Initialize the relay file server. This MUST be called in a Node.js or similar environment
+ * Initialize the relay file server. This MUST be called in a Node.js
  * @async
+ * @returns The url of the relay server
  */
 const initServer = async () => {
   const app = express();
@@ -112,7 +113,7 @@ const initServer = async () => {
         }
 
         try {
-          fs.writeFileSync(req.params.path, req.body.contents);
+          fs.writeFileSync(req.params.path, req.body.contents, writeOptions);
           return res.status(200).json({success: true, message: "File written"});
         } catch (err: any) {
           return res.status(500).json({success: false, error: err});

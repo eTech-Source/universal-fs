@@ -1,10 +1,15 @@
 import auth from "./client/auth";
 import server from "./server/server";
-//@ts-ignore
 import dotenv from "dotenv";
 import initServer from "./server/server";
 import {isBrowser, isNode} from "browser-or-node";
 import fs from "fs";
+import readFile from "./client/operations/readFile/readFile";
+import readdir from "./client/operations/readdir/readdir";
+import writeFile from "./client/operations/writeFile/writeFile";
+import mkdir from "./client/operations/mkdir/mkdir";
+import unlink from "./client/operations/unlink/unlink";
+import rmdir from "./client/operations/rmdir/rmdir";
 
 dotenv.config({path: ".env"});
 
@@ -35,4 +40,15 @@ const init = async (url: string, password?: string) => {
   await auth(password);
 };
 
-export {init, initServer, auth, server};
+export {
+  init,
+  initServer,
+  auth,
+  server,
+  readFile,
+  readdir,
+  writeFile,
+  mkdir,
+  unlink,
+  rmdir
+};

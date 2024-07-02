@@ -57,6 +57,7 @@
     "@types/dotenv": "^8.2.0",
     "bcrypt": "^5.1.1",
     "browser-or-node": "^3.0.0",
+    "buffer": "^6.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "tslib": "^2.6.3"
