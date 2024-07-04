@@ -14,8 +14,8 @@
       "resolveJsonModule": true,
       "isolatedModules": true,
       "incremental": false,
-      "skipDefaultLibCheck": true
+      "skipDefaultLibCheck": true,
     },
-    "include": ["*"],
+    "include": ["src/", "types/"],
     "exclude": ["eslint.config.js"]
   }

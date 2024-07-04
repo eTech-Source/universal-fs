@@ -30,7 +30,7 @@ import getToken from "../../../helpers/getToken";
  */
 const mkdir = async (
   path: MkdirParams["path"],
-  options: MkdirParams["options"]
+  options?: MkdirParams["options"]
 ): Promise<MkdirReturn> => {
   const url = await getUrl();
 

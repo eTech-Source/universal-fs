@@ -1,7 +1,4 @@
-import serve from "rollup-plugin-serve";
-import typescript from "@rollup/plugin-typescript";
-import modify from "rollup-plugin-modify";
-import copy from "rollup-plugin-copy";
+import typescript from "rollup-plugin-typescript2";
 
 export default [
   {
@@ -15,11 +12,7 @@ export default [
 
     inlineDynamicImports: true,
     presserveModules: true,
-    plugins: [
-      serve({contentBase: "dist"}),
-      typescript(),
-      copy({targets: [{src: "src/server/init.sh", dest: "dist"}]})
-    ],
+    plugins: [typescript()],
     external: ["express"]
   }
 ];

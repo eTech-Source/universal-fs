@@ -11,7 +11,7 @@ import ngrok from "@ngrok/ngrok";
  */
 const initServer = async () => {
   const app = express();
-  const port = 3000;
+  let port = 3000;
 
   app.use(express.json());
   app.use((req, res, next) => {
@@ -170,21 +170,27 @@ const initServer = async () => {
     }
   });
 
-  app.listen(port, () => {
-    console.info(`Listening on port ${port}`);
+  try {
+    console.log("running");
+    app.listen(port, () => {
+      console.info(`Listening on port ${port}`);
+    });
+  } catch (err: any) {
+    console.log("err", err);
+    if (err.code === "EADDRINUSE") {
+      console.info(
+        `Port ${port} is already in use. Trying to connect on port ${port++}`
+      );
+      port = port++;
+    }
+  }
+
+  const listener = await ngrok.connect({
+    addr: port,
+    authtoken: process.env.NGROK_AUTHTOKEN
   });
 
-  let listener: ngrok.Listener;
-
-  try {
-    listener = await ngrok.connect({
-      addr: 3000,
-      authtoken: process.env.NGROK_AUTHTOKEN
-    });
-    return listener.url();
-  } catch (err: any) {
-    throw err;
-  }
+  return listener.url();
 };
 
 export default initServer;

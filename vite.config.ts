@@ -1,10 +1,4 @@
-import {defineConfig} from "vite";
-
-if (!process.env.UNIVERSAL_FS_PASSWORD) {
-  throw new Error(
-    "Could not get UNIVERSAL_FS_PASSWORD from .env for vite config"
-  );
-}
+import {defineConfig} from "vitest/config";
 
 export default defineConfig({
   server: {
@@ -13,8 +7,6 @@ export default defineConfig({
     }
   },
   test: {
-    env: {
-      UNIVERSAL_FS_PASSWORD: process.env.UNIVERSAL_FS_PASSWORD
-    }
+    setupFiles: ["tests/setup.spec.ts"]
   }
 });
