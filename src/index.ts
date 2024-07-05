@@ -1,6 +1,6 @@
 import auth from "./client/auth";
 import dotenv from "dotenv";
-import server from "./server/server";
+import Server from "./server/server";
 import {isBrowser, isNode} from "browser-or-node";
 import fs from "fs";
 import readFile from "./client/operations/readFile/readFile";
@@ -39,4 +39,4 @@ const init = async (url: string, password?: string) => {
   await auth(password);
 };
 
-export {init, server, auth, readFile, readdir, writeFile, mkdir, unlink, rmdir};
+export {init, Server, auth, readFile, readdir, writeFile, mkdir, unlink, rmdir};

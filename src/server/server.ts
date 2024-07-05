@@ -5,6 +5,7 @@ import fs from "fs";
 import isJson from "../helpers/isJson";
 import ngrok from "@ngrok/ngrok";
 import http from "http";
+import process from "process";
 
 class Server {
   private app!: Express;
@@ -198,7 +199,7 @@ class Server {
     return listener.url();
   }
 
-  public async stop() {
+  public stop() {
     this.server.close();
   }
 }
