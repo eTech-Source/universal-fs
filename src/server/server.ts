@@ -7,6 +7,9 @@ import ngrok from "@ngrok/ngrok";
 import http from "http";
 import process from "process";
 
+/**
+ * The class for controllering the file relay server.
+ */
 class Server {
   private app!: Express;
   private port!: number;
@@ -16,6 +19,11 @@ class Server {
     this.port = 3000;
   }
 
+  /**
+   * Initilizes the file relay server
+   * @returns The url to the open Ngrok tunnel
+   * @async
+   */
   public async init() {
     this.app.use(express.json());
     this.app.use((req, res, next) => {
@@ -199,6 +207,9 @@ class Server {
     return listener.url();
   }
 
+  /**
+   * Stops the server by closing the current connection.
+   * */
   public stop() {
     this.server.close();
   }
