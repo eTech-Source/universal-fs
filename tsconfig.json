@@ -13,8 +13,9 @@
       "moduleResolution": "node",
       "resolveJsonModule": true,
       "isolatedModules": true,
-      "incremental": false
+      "incremental": false,
+      "skipDefaultLibCheck": true,
     },
-    "include": ["./"],
+    "include": ["src/", "types/"],
     "exclude": ["eslint.config.js"]
   }
