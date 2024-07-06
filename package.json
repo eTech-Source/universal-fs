@@ -5,7 +5,6 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "test": "npx vitest",
     "dev": "npx rollup -cw & nodemon dist/index.js",
     "build": "npx rollup -c",
     "prepare": "husky install",
