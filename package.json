@@ -14,7 +14,7 @@
     "format:fix": "npx prettier --write"
   },
   "lint-staged": {
-    "*.{js,ts,tsx,astro,mjs,cjs,spec.ts,spec.tsx}": "eslint --cache --fix",
+    "*.{js,ts,tsx,astro,mjs,cjs,spec.ts,spec.tsx}": "eslint --cache --fix && pnpm build",
     "*.{js,css,md,ts,tsx,astro,mjs,cjs}": "prettier --write",
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
