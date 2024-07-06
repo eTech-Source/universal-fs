@@ -13,6 +13,6 @@ export default [
     inlineDynamicImports: true,
     presserveModules: true,
     plugins: [typescript()],
-    external: ["express"]
+    external: ["express", "bcrypt", "browser-or-node", "buffer", "dotenv"]
   }
 ];
