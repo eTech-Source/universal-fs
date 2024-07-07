@@ -15,6 +15,7 @@
       "isolatedModules": true,
       "incremental": false,
       "skipDefaultLibCheck": true,
+      "declaration": true
     },
     "include": ["src/", "types/"],
     "exclude": ["eslint.config.js"]
