@@ -55,7 +55,9 @@ Simply call `init()` with `Server.init()` as a prop.
 ```ts
 import {init, Server, readFile} from "universal-fs";
 
-await init(await Server.init());
+const server = new Server();
+
+await init(await server.init());
 
 await readFile("index.ts");
 ```
@@ -73,7 +75,9 @@ import {Server} from "universal-fs";
 
 app.get("/api/fs-init", async (req, res) => {
   // Your custom auth code
-  const url = await Server.init();
+  const server = new Server();
+
+  const url = await server.init();
   return res.json({
     url,
     token: encrypt(proccess.env.UNIVERSAL_FS_TOKEN as string) // use the encryption library of your choosing
