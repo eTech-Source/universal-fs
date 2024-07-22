@@ -32,6 +32,7 @@ universal-fs provides some core Node fs functions in related to the file system 
 | Edge support                                         | ✅              | ❌      | ❌             |
 | Access to other codebases file system                | ✅              | ❌      | ❌             |
 | Additional functionality outside of standard Node fs | ✅              | ❌      | ❌             |
+| Custom API generation                                | ✅              | ❌      | ❌             |
 | Supports all Node fs methods                         | ❌              | ✅      | ❌             |
 
 # Gotcha
@@ -110,6 +111,50 @@ await readFile("index.html");
 - writeFile
 
 All of these are fully backwards compatible with Node fs promise api.
+
+# NEW🚨: Usage without NGROK
+
+As of universal-fs v1.1.0 your own server with your own custom url for universal-fs with all the same benefits.
+
+First create a function with the following shape:
+
+```ts
+(app: Express, server?: http.Server) => Promise<string> | string;
+```
+
+You won't actually end up calling this function but universal-fs will. Here is an example of what this function could look like:
+
+```ts
+const startServer = (app: Express): Promise<string> => {
+  app.listen(3001, () => {
+    console.log("listening on port 3001");
+  });
+};
+```
+
+This will tell universal-fs to listen on port 3001.
+
+Now pass this function into the `server.init()` call:
+
+```ts
+const server = new Server();
+
+await server.init(startServer);
+```
+
+Overall your total code should be:
+
+```ts
+const startServer = (app: Express): Promise<string> => {
+  app.listen(3001, () => {
+    console.log("listening on port 3001");
+  });
+};
+
+const server = new Server();
+
+await server.init(startServer);
+```
 
 # Relay file server api
 
