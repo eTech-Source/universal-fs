@@ -125,11 +125,10 @@ First create a function with the following shape:
 You won't actually end up calling this function but universal-fs will. Here is an example of what this function could look like:
 
 ```ts
-const startServer = (app: Express): Promise<string> => {
+const startServer = (app: Express): string => {
   app.listen(3001, () => {
     console.log("listening on port 3001");
   });
-};
 ```
 
 This will tell universal-fs to listen on port 3001.
@@ -137,24 +136,28 @@ This will tell universal-fs to listen on port 3001.
 Now pass this function into the `server.init()` call:
 
 ```ts
-const server = new Server();
+const server = new Server(startServer);
 
-await server.init(startServer);
+await server.init();
 ```
 
 Overall your total code should be:
 
 ```ts
-const startServer = (app: Express): Promise<string> => {
+const startServer = (app: Express): string => {
   app.listen(3001, () => {
     console.log("listening on port 3001");
   });
+
+  return "http://localhost:3001";
 };
 
-const server = new Server();
+const server = new Server(startServer);
 
-await server.init(startServer);
+await server.init();
 ```
+
+Please note that your function MUST return the url the server is on whether that be remote or local.
 
 # Relay file server api
 

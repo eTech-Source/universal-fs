@@ -86,9 +86,14 @@ const isJson = (str) => {
  * The class for controllering the file relay server.
  */
 class Server {
-    constructor() {
+    /**
+     * The constructor of the class for controllering the file relay server.
+     * @param startServer - An optional custom function to use your own Express server
+     */
+    constructor(startServer) {
         this.app = express();
         this.port = 3000;
+        this.startServer = startServer !== null && startServer !== void 0 ? startServer : undefined;
     }
     /**
      * Initilizes the file relay server
@@ -160,7 +165,6 @@ class Server {
                     catch (err) {
                         return res.status(500).json({ success: false, error: err });
                     }
-                    break;
                 default:
                     // This should never trigger because of the first check
                     return res.status(422).json({ error: "Method not found" });
@@ -230,6 +234,25 @@ class Server {
                     return res.status(422).json({ error: "Method not found" });
             }
         });
+        if (this.startServer) {
+            let customUrl;
+            if (this.startServer.length === 0) {
+                throw new Error("A startServer function must accpet at least one argument");
+            }
+            else if (this.startServer.length === 1) {
+                customUrl = await this.startServer(this.app);
+            }
+            else if (this.startServer.length >= 3) {
+                throw new Error("StartServer has too many arguments");
+            }
+            else {
+                customUrl = await this.startServer(this.app, this.server);
+            }
+            if (!customUrl) {
+                throw new Error("StartServer must return a url");
+            }
+            return customUrl;
+        }
         try {
             this.server = this.app.listen(this.port, () => {
                 console.info(`Listening on this.port ${this.port}`);
@@ -249,7 +272,7 @@ class Server {
     }
     /**
      * Stops the server by closing the current connection.
-     * */
+     */
     stop() {
         this.server.close();
     }

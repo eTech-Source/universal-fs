@@ -223,6 +223,8 @@ class Server {
       if (!customUrl) {
         throw new Error("StartServer must return a url");
       }
+
+      return customUrl;
     }
 
     try {
