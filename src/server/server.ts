@@ -14,9 +14,29 @@ class Server {
   private app!: Express;
   private port!: number;
   private server!: http.Server;
-  constructor() {
+  /**
+   * An optional custom function to use your own Express server.
+   * @param app - The express app
+   * @param server - The http server
+   * @returns The url of your custom server
+   */
+  private startServer?:
+    | ((app: Express, server?: http.Server) => Promise<string> | string)
+    | undefined;
+
+  /**
+   * The constructor of the class for controllering the file relay server.
+   * @param startServer - An optional custom function to use your own Express server
+   */
+  constructor(
+    startServer?: (
+      app: Express,
+      server?: http.Server
+    ) => Promise<string> | string
+  ) {
     this.app = express();
     this.port = 3000;
+    this.startServer = startServer ?? undefined;
   }
 
   /**
@@ -109,7 +129,6 @@ class Server {
           } catch (err: any) {
             return res.status(500).json({success: false, error: err});
           }
-          break;
         default:
           // This should never trigger because of the first check
           return res.status(422).json({error: "Method not found"});
@@ -186,6 +205,26 @@ class Server {
       }
     });
 
+    if (this.startServer) {
+      let customUrl;
+
+      if (this.startServer.length === 0) {
+        throw new Error(
+          "A startServer function must accpet at least one argument"
+        );
+      } else if (this.startServer.length === 1) {
+        customUrl = await this.startServer(this.app);
+      } else if (this.startServer.length >= 3) {
+        throw new Error("StartServer has too many arguments");
+      } else {
+        customUrl = await this.startServer(this.app, this.server);
+      }
+
+      if (!customUrl) {
+        throw new Error("StartServer must return a url");
+      }
+    }
+
     try {
       this.server = this.app.listen(this.port, () => {
         console.info(`Listening on this.port ${this.port}`);
@@ -209,7 +248,7 @@ class Server {
 
   /**
    * Stops the server by closing the current connection.
-   * */
+   */
   public stop() {
     this.server.close();
   }
