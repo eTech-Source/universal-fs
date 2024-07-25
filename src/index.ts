@@ -18,7 +18,7 @@ dotenv.config({path: ".env"});
  * @param password - The password to protect the files
  * @async
  */
-const init = async (url: string, password?: string) => {
+const init = async (url: string, password?: string, isProtected?: boolean) => {
   const response = await fetch(url);
 
   if (response.status === 404) {
@@ -36,7 +36,9 @@ const init = async (url: string, password?: string) => {
     fs.writeFileSync(".fs/url.txt", url);
   }
 
-  await auth(password);
+  if (isProtected) {
+    await auth(password);
+  }
 };
 
 export {init, Server, auth, readFile, readdir, writeFile, mkdir, unlink, rmdir};
