@@ -12,5 +12,5 @@ import rmdir from "./client/operations/rmdir/rmdir";
  * @param password - The password to protect the files
  * @async
  */
-declare const init: (url: string, password?: string) => Promise<void>;
+declare const init: (url: string, password?: string, isProtected?: boolean) => Promise<void>;
 export { init, Server, auth, readFile, readdir, writeFile, mkdir, unlink, rmdir };
