@@ -7,6 +7,7 @@ declare class Server {
     private app;
     private port;
     private server;
+    private isProtected;
     /**
      * An optional custom function to use your own Express server.
      * @param app - The express app
@@ -18,7 +19,15 @@ declare class Server {
      * The constructor of the class for controllering the file relay server.
      * @param startServer - An optional custom function to use your own Express server
      */
-    constructor(startServer?: (app: Express, server?: http.Server) => Promise<string> | string);
+    constructor(options?: {
+        /**
+         * Whether the server should require a password for readOperations on non-ignored files
+         * @default true
+         */
+        isProtected?: boolean;
+        /** An optional object with options for configuring the server */
+        startServer?: (app: Express, server?: http.Server) => Promise<string> | string;
+    });
     /**
      * Initilizes the file relay server
      * @returns The url to the open Ngrok tunnel

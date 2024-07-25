@@ -136,7 +136,7 @@ This will tell universal-fs to listen on port 3001.
 Now pass this function into the `server.init()` call:
 
 ```ts
-const server = new Server(startServer);
+const server = new Server({startServer});
 
 await server.init();
 ```
@@ -152,12 +152,22 @@ const startServer = (app: Express): string => {
   return "http://localhost:3001";
 };
 
-const server = new Server(startServer);
+const server = new Server({startServer});
 
 await server.init();
 ```
 
 Please note that your function MUST return the url the server is on whether that be remote or local.
+
+# Unprotected usage
+
+In order to use universal-fs without a password add the following option to the `Server` constructor:
+
+```ts
+const server = new Server({isProtected: false});
+```
+
+You can now use universal-fs read methods like normal on files not in `.gitignore`.
 
 # Relay file server api
 

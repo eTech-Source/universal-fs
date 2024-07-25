@@ -14,6 +14,8 @@ class Server {
   private app!: Express;
   private port!: number;
   private server!: http.Server;
+  private isProtected: boolean = true;
+
   /**
    * An optional custom function to use your own Express server.
    * @param app - The express app
@@ -28,15 +30,22 @@ class Server {
    * The constructor of the class for controllering the file relay server.
    * @param startServer - An optional custom function to use your own Express server
    */
-  constructor(
+  constructor(options?: {
+    /**
+     * Whether the server should require a password for readOperations on non-ignored files
+     * @default true
+     */
+    isProtected?: boolean;
+    /** An optional object with options for configuring the server */
     startServer?: (
       app: Express,
       server?: http.Server
-    ) => Promise<string> | string
-  ) {
+    ) => Promise<string> | string;
+  }) {
     this.app = express();
     this.port = 3000;
-    this.startServer = startServer ?? undefined;
+    this.startServer = options?.startServer ?? undefined;
+    this.isProtected = options?.isProtected ?? true;
   }
 
   /**
@@ -46,35 +55,63 @@ class Server {
    */
   public async init() {
     this.app.use(express.json());
+    let authed = false;
+
+    if (this.isProtected) {
+      this.app.use((req, res, next) => {
+        if (!process.env.UNIVERSAL_FS_PASSWORD) {
+          return res.status(401).json({
+            success: false,
+            error:
+              "An environment variable UNIVERSAL_FS_PASSWORD is required to protect your files"
+          });
+        }
+
+        if (!req.headers.authorization) {
+          return res.status(401).json({
+            success: false,
+            error: "An Authorization header is required"
+          });
+        }
+
+        const token = req.headers.authorization.replace(/^Bearer\s/, "");
+
+        if (!bcrypt.compareSync(process.env.UNIVERSAL_FS_PASSWORD, token)) {
+          return res.status(401).json({
+            success: false,
+            error: "Unauthorized request"
+          });
+        }
+
+        authed = true;
+
+        next();
+      });
+    }
+
     this.app.use((req, res, next) => {
-      if (!process.env.UNIVERSAL_FS_PASSWORD) {
-        return res.status(401).json({
-          success: false,
-          error:
-            "An environment variable UNIVERSAL_FS_PASSWORD is required to protect your files"
-        });
+      if (
+        !authed &&
+        (req.query.method === "writeFile" ||
+          req.query.method === "mkdir" ||
+          req.query.method === "unlink" ||
+          req.query.method === "rmdir")
+      ) {
+        throw new Error(
+          "ILLEGAL METHOD: you cannot use write or delete on a non-protected server"
+        );
       }
 
-      if (!req.headers.authorization) {
-        return res.status(401).json({
-          success: false,
-          error: "An Authorization header is required"
-        });
+      const ignoredFile = fs.readFileSync(".gitignore", "utf8").split("\n");
+
+      for (const file of ignoredFile) {
+        if (file === req.params.path) {
+          return res.status(403).json({
+            error: "The requested resource is not avabile"
+          });
+        }
       }
 
-      const token = req.headers.authorization.replace(/^Bearer\s/, "");
-
-      if (!bcrypt.compareSync(process.env.UNIVERSAL_FS_PASSWORD, token)) {
-        return res.status(401).json({
-          success: false,
-          error: "Unauthorized request"
-        });
-      }
-
-      next();
-    });
-
-    this.app.use((req, res, next) => {
       if (!req.query.method || req.query.method === "") {
         return res.status(422).json({
           error: "A method is required"

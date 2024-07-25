@@ -90,10 +90,13 @@ class Server {
      * The constructor of the class for controllering the file relay server.
      * @param startServer - An optional custom function to use your own Express server
      */
-    constructor(startServer) {
+    constructor(options) {
+        var _a, _b;
+        this.isProtected = true;
         this.app = express();
         this.port = 3000;
-        this.startServer = startServer !== null && startServer !== void 0 ? startServer : undefined;
+        this.startServer = (_a = options === null || options === void 0 ? void 0 : options.startServer) !== null && _a !== void 0 ? _a : undefined;
+        this.isProtected = (_b = options === null || options === void 0 ? void 0 : options.isProtected) !== null && _b !== void 0 ? _b : true;
     }
     /**
      * Initilizes the file relay server
@@ -102,29 +105,48 @@ class Server {
      */
     async init() {
         this.app.use(express.json());
+        let authed = false;
+        if (this.isProtected) {
+            this.app.use((req, res, next) => {
+                if (!process$1.env.UNIVERSAL_FS_PASSWORD) {
+                    return res.status(401).json({
+                        success: false,
+                        error: "An environment variable UNIVERSAL_FS_PASSWORD is required to protect your files"
+                    });
+                }
+                if (!req.headers.authorization) {
+                    return res.status(401).json({
+                        success: false,
+                        error: "An Authorization header is required"
+                    });
+                }
+                const token = req.headers.authorization.replace(/^Bearer\s/, "");
+                if (!bcrypt.compareSync(process$1.env.UNIVERSAL_FS_PASSWORD, token)) {
+                    return res.status(401).json({
+                        success: false,
+                        error: "Unauthorized request"
+                    });
+                }
+                authed = true;
+                next();
+            });
+        }
         this.app.use((req, res, next) => {
-            if (!process$1.env.UNIVERSAL_FS_PASSWORD) {
-                return res.status(401).json({
-                    success: false,
-                    error: "An environment variable UNIVERSAL_FS_PASSWORD is required to protect your files"
-                });
+            if (!authed &&
+                (req.query.method === "writeFile" ||
+                    req.query.method === "mkdir" ||
+                    req.query.method === "unlink" ||
+                    req.query.method === "rmdir")) {
+                throw new Error("ILLEGAL METHOD: you cannot use write or delete on a non-protected server");
             }
-            if (!req.headers.authorization) {
-                return res.status(401).json({
-                    success: false,
-                    error: "An Authorization header is required"
-                });
+            const ignoredFile = fs.readFileSync(".gitignore", "utf8").split("\n");
+            for (const file of ignoredFile) {
+                if (file === req.params.path) {
+                    return res.status(403).json({
+                        error: "The requested resource is not avabile"
+                    });
+                }
             }
-            const token = req.headers.authorization.replace(/^Bearer\s/, "");
-            if (!bcrypt.compareSync(process$1.env.UNIVERSAL_FS_PASSWORD, token)) {
-                return res.status(401).json({
-                    success: false,
-                    error: "Unauthorized request"
-                });
-            }
-            next();
-        });
-        this.app.use((req, res, next) => {
             if (!req.query.method || req.query.method === "") {
                 return res.status(422).json({
                     error: "A method is required"
@@ -607,7 +629,7 @@ dotenv.config({ path: ".env" });
  * @param password - The password to protect the files
  * @async
  */
-const init = async (url, password) => {
+const init = async (url, password, isProtected) => {
     const response = await fetch(url);
     if (response.status === 404) {
         throw new Error("Relay server not found");
@@ -622,7 +644,9 @@ const init = async (url, password) => {
         }
         fs.writeFileSync(".fs/url.txt", url);
     }
-    await auth(password);
+    if (isProtected) {
+        await auth(password);
+    }
 };
 
 export { Server, auth, init, mkdir, readFile, readdir, rmdir, unlink, writeFile };
