@@ -187,7 +187,7 @@ class Server {
                     catch (err) {
                         return res.status(500).json({ success: false, error: err });
                     }
-                case "existsSync":
+                case "exists":
                     try {
                         const exists = fs.existsSync(req.params.path);
                         return res.json({ success: true, exists: exists });
@@ -657,7 +657,7 @@ const rmdir = async (path, options) => {
 const exists = async (path, options) => {
     const url = await getUrl();
     try {
-        const response = await fetch(`${url}/${path}?method=existsSync`, {
+        const response = await fetch(`${url}/${path}?method=exists`, {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             headers: {
                 Authorization: `Bearer ${await getTokenSync()}`
@@ -697,8 +697,5 @@ const init = async (url, password, isProtected) => {
         await auth(password);
     }
 };
-const server = new Server({ isProtected: false });
-await init(await server.init());
-console.log(await exists("package.json"));
 
 export { Server, auth, exists, init, mkdir, readFile, readdir, rmdir, unlink, writeFile };
