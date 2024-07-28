@@ -187,6 +187,14 @@ class Server {
                     catch (err) {
                         return res.status(500).json({ success: false, error: err });
                     }
+                case "existsSync":
+                    try {
+                        const exists = fs.existsSync(req.params.path);
+                        return res.json({ success: true, exists: exists });
+                    }
+                    catch (err) {
+                        return res.status(500).json({ success: false, error: err });
+                    }
                 default:
                     // This should never trigger because of the first check
                     return res.status(422).json({ error: "Method not found" });
@@ -312,7 +320,7 @@ const getUrl = async () => {
     return url;
 };
 
-const getToken = async () => {
+const getTokenSync = async () => {
     if (isBrowser) {
         return getCookie("universal-fs-token");
     }
@@ -394,7 +402,7 @@ const readFile = async (path, options) => {
         const response = await fetch(`${url}/${path}?method=readFile`, {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             headers: {
-                Authorization: `Bearer ${await getToken()}`,
+                Authorization: `Bearer ${await getTokenSync()}`,
                 options: JSON.stringify(options)
             }
         });
@@ -444,7 +452,7 @@ const readdir = async (path, options) => {
         const response = await fetch(`${url}/${path}?method=readdir`, {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             headers: {
-                Authorization: `Bearer ${await getToken()}`,
+                Authorization: `Bearer ${await getTokenSync()}`,
                 options: JSON.stringify(options)
             }
         });
@@ -513,7 +521,7 @@ const writeFile = async (path, data, options) => {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${await getToken()}`,
+                "Authorization": `Bearer ${await getTokenSync()}`,
                 "options": JSON.stringify(options),
                 "content-type": "application/json"
             },
@@ -559,7 +567,7 @@ const mkdir = async (path, options) => {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${await getToken()}`,
+                "Authorization": `Bearer ${await getTokenSync()}`,
                 "options": JSON.stringify(options)
             }
         });
@@ -612,10 +620,51 @@ const rmdir = async (path, options) => {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             method: "DELETE",
             headers: {
-                Authorization: `Bearer ${await getToken()}`,
+                Authorization: `Bearer ${await getTokenSync()}`,
                 options: JSON.stringify(options)
             }
         });
+    }
+    catch (err) {
+        throw err;
+    }
+};
+
+/**
+ * A modern implementation of the Node fs @see{@link exists} API.
+ * Returns `true` if the path exists, `false` otherwise in promise form.
+ *
+ * Usage:
+ * ```ts
+ * import { exists } from 'universal-fs';
+ *
+ * const hasFoundFile = await exists('/path/to/file.txt');
+ * ```
+ *
+ * You can also abort an outgoing request using an AbortSignal. If a request is aborted the promise returned is rejected with an AbortError:
+ * ```ts
+ *
+ * import { exists } from 'universal-fs';
+ *
+ * const controller = new AbortController();
+ * const { signal } = controller;
+ *
+ * const hasFoundFile = await exists('/path/to/file.txt', { signal });
+ *
+ * controller.abort();
+ * ```
+ */
+const exists = async (path, options) => {
+    const url = await getUrl();
+    try {
+        const response = await fetch(`${url}/${path}?method=existsSync`, {
+            signal: options === null || options === void 0 ? void 0 : options.signal,
+            headers: {
+                Authorization: `Bearer ${await getTokenSync()}`
+            }
+        });
+        const { exists } = await response.json();
+        return exists;
     }
     catch (err) {
         throw err;
@@ -648,5 +697,8 @@ const init = async (url, password, isProtected) => {
         await auth(password);
     }
 };
+const server = new Server({ isProtected: false });
+await init(await server.init());
+console.log(await exists("package.json"));
 
-export { Server, auth, init, mkdir, readFile, readdir, rmdir, unlink, writeFile };
+export { Server, auth, exists, init, mkdir, readFile, readdir, rmdir, unlink, writeFile };

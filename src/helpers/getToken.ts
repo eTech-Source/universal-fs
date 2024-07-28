@@ -1,7 +1,7 @@
 import {isBrowser, isNode} from "browser-or-node";
 import getCookie from "./getCookie";
 
-const getToken = async () => {
+const getTokenSync = async () => {
   if (isBrowser) {
     return getCookie("universal-fs-token");
   } else if (isNode) {
@@ -10,4 +10,4 @@ const getToken = async () => {
   }
 };
 
-export default getToken;
+export default getTokenSync;

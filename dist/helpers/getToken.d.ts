@@ -1,2 +1,2 @@
-declare const getToken: () => Promise<string | null | undefined>;
-export default getToken;
+declare const getTokenSync: () => Promise<string | null | undefined>;
+export default getTokenSync;
