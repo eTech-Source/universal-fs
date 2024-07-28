@@ -33,7 +33,7 @@ const exists = async (
   const url = await getUrl();
 
   try {
-    const response = await fetch(`${url}/${path}?method=existsSync`, {
+    const response = await fetch(`${url}/${path}?method=exists`, {
       signal: options?.signal,
       headers: {
         Authorization: `Bearer ${await getToken()}`

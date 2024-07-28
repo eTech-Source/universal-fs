@@ -1,3 +1,7 @@
+# v.1.3.1
+
+Remove unused dependency httpxmlprerequest. Fix naming from existsSync to exists in the file relay server
+
 # v.1.3.0
 
 This update adds the `exists` method.

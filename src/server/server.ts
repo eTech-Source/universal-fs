@@ -166,7 +166,7 @@ class Server {
           } catch (err: any) {
             return res.status(500).json({success: false, error: err});
           }
-        case "existsSync":
+        case "exists":
           try {
             const exists = fs.existsSync(req.params.path);
             return res.json({success: true, exists: exists});
