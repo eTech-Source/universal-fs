@@ -9,6 +9,7 @@ import writeFile from "./client/operations/writeFile/writeFile";
 import mkdir from "./client/operations/mkdir/mkdir";
 import unlink from "./client/operations/unlink/unlink";
 import rmdir from "./client/operations/rmdir/rmdir";
+import exists from "./client/operations/exists/exists";
 
 dotenv.config({path: ".env"});
 
@@ -41,4 +42,15 @@ const init = async (url: string, password?: string, isProtected?: boolean) => {
   }
 };
 
-export {init, Server, auth, readFile, readdir, writeFile, mkdir, unlink, rmdir};
+export {
+  init,
+  Server,
+  auth,
+  readFile,
+  readdir,
+  writeFile,
+  mkdir,
+  unlink,
+  rmdir,
+  exists
+};
