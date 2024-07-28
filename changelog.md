@@ -1,3 +1,7 @@
+# v.1.3.0
+
+This update adds the `exists` method.
+
 # v.1.2.0
 
 This update adds the ability to use universal-fs without a password. For more details see

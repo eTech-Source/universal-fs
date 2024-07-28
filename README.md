@@ -109,6 +109,7 @@ await readFile("index.html");
 - rmdir
 - unlink
 - writeFile
+- exists
 
 All of these are fully backwards compatible with Node fs promise api.
 
