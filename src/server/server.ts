@@ -166,6 +166,13 @@ class Server {
           } catch (err: any) {
             return res.status(500).json({success: false, error: err});
           }
+        case "existsSync":
+          try {
+            const exists = fs.existsSync(req.params.path);
+            return res.json({success: true, exists: exists});
+          } catch (err: any) {
+            return res.status(500).json({success: false, error: err});
+          }
         default:
           // This should never trigger because of the first check
           return res.status(422).json({error: "Method not found"});
