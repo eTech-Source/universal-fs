@@ -33,12 +33,15 @@ const exists = async (
   const url = await getUrl();
 
   try {
-    const response = await fetch(`${url}/${path}?method=exists`, {
-      signal: options?.signal,
-      headers: {
-        Authorization: `Bearer ${await getToken()}`
+    const response = await fetch(
+      `${url}/${encodeURIComponent(path as string)}?method=exists`,
+      {
+        signal: options?.signal,
+        headers: {
+          Authorization: `Bearer ${await getToken()}`
+        }
       }
-    });
+    );
 
     const {exists} = await response.json();
     return exists;
