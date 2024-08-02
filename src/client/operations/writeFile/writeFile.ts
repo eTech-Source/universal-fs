@@ -60,16 +60,19 @@ const writeFile = async (
   const url = await getUrl();
 
   try {
-    const response = await fetch(`${url}/${path}?method=writeFile`, {
-      signal: options?.signal,
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${await getToken()}`,
-        "options": JSON.stringify(options),
-        "content-type": "application/json"
-      },
-      body: JSON.stringify({contents: data})
-    });
+    const response = await fetch(
+      `${url}/${encodeURIComponent(path as string)}?method=writeFile`,
+      {
+        signal: options?.signal,
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${await getToken()}`,
+          "options": JSON.stringify(options),
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({contents: data})
+      }
+    );
   } catch (err: any) {
     throw err;
   }

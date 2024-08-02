@@ -61,23 +61,25 @@ const readFile = async (
   options?: ReadFileParams["options"]
 ): ReadFileReturn => {
   const url = await getUrl();
+  const BufferPolyfill = await pollyfillBuffer();
 
   try {
-    const response = await fetch(`${url}/${path}?method=readFile`, {
-      signal: options?.signal,
-      headers: {
-        Authorization: `Bearer ${await getToken()}`,
-        options: JSON.stringify(options)
+    const response = await fetch(
+      `${url}/${encodeURIComponent(path as string)}?method=readFile`,
+      {
+        signal: options?.signal,
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          options: JSON.stringify(options)
+        }
       }
-    });
+    );
 
     const {buffer} = await response.json();
 
     if (!options?.encoding) {
       return buffer;
     }
-
-    const BufferPolyfill = await pollyfillBuffer();
 
     return BufferPolyfill.from(buffer).toString(options?.encoding);
   } catch (err: any) {

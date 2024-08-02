@@ -19,7 +19,7 @@ const rmdir = async (
   const url = await getUrl();
 
   try {
-    await fetch(`${url}/${path}`, {
+    await fetch(`${url}/${encodeURIComponent(path as string)}`, {
       signal: options?.signal,
       method: "DELETE",
       headers: {
