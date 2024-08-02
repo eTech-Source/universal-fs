@@ -132,6 +132,7 @@ class Server {
             });
         }
         this.app.use((req, res, next) => {
+            const path = decodeURIComponent(req.params.path);
             if (!authed &&
                 (req.query.method === "writeFile" ||
                     req.query.method === "mkdir" ||
@@ -141,7 +142,7 @@ class Server {
             }
             const ignoredFile = fs.readFileSync(".gitignore", "utf8").split("\n");
             for (const file of ignoredFile) {
-                if (file === req.params.path) {
+                if (file === path) {
                     return res.status(403).json({
                         error: "The requested resource is not avabile"
                     });
@@ -159,7 +160,19 @@ class Server {
             }
             next();
         });
+        this.app.use((req, res, next) => {
+            const path = decodeURIComponent(req.params.path);
+            const validPathRegex = /^(\/?(\.{1,2}\/)*[a-zA-Z0-9\-.]+)+$/;
+            if (!validPathRegex.test(path)) {
+                return res.status(400).json({
+                    success: false,
+                    error: `Path ${path} is not valid`
+                });
+            }
+            next();
+        });
         this.app.get("/:path", async (req, res) => {
+            const path = decodeURIComponent(req.params.path);
             switch (req.query.method) {
                 case "readFile":
                     let fileOptions = null;
@@ -168,7 +181,7 @@ class Server {
                         fileOptions = JSON.parse(req.headers.options);
                     }
                     try {
-                        fileBuffer = fs.readFileSync(req.params.path, fileOptions);
+                        fileBuffer = fs.readFileSync(path, fileOptions);
                         return res.json({ success: true, buffer: fileBuffer });
                     }
                     catch (err) {
@@ -181,7 +194,7 @@ class Server {
                         dirOptions = JSON.parse(req.headers.options);
                     }
                     try {
-                        dirs = fs.readdirSync(req.params.path, dirOptions);
+                        dirs = fs.readdirSync(path, dirOptions);
                         return res.json({ success: true, dirs: dirs });
                     }
                     catch (err) {
@@ -189,7 +202,7 @@ class Server {
                     }
                 case "exists":
                     try {
-                        const exists = fs.existsSync(req.params.path);
+                        const exists = fs.existsSync(path);
                         return res.json({ success: true, exists: exists });
                     }
                     catch (err) {
@@ -201,6 +214,7 @@ class Server {
             }
         });
         this.app.post("/:path", (req, res) => {
+            const path = decodeURIComponent(req.params.path);
             switch (req.query.method) {
                 case "writeFile":
                     let writeOptions;
@@ -208,7 +222,7 @@ class Server {
                         writeOptions = JSON.parse(req.headers.options);
                     }
                     try {
-                        fs.writeFileSync(req.params.path, req.body.contents, writeOptions);
+                        fs.writeFileSync(path, req.body.contents, writeOptions);
                         return res
                             .status(200)
                             .json({ success: true, message: "File written" });
@@ -222,7 +236,7 @@ class Server {
                         mkdirOptions = JSON.parse(req.headers.options);
                     }
                     try {
-                        fs.mkdirSync(req.params.path, mkdirOptions);
+                        fs.mkdirSync(path, mkdirOptions);
                         return res
                             .status(200)
                             .json({ success: true, message: "Directory created" });
@@ -235,10 +249,11 @@ class Server {
             }
         });
         this.app.delete("/:path", (req, res) => {
+            const path = decodeURIComponent(req.params.path);
             switch (req.query.method) {
                 case "unlink":
                     try {
-                        fs.unlinkSync(req.params.path);
+                        fs.unlinkSync(path);
                         return res
                             .status(200)
                             .json({ success: true, message: "File deleted" });
@@ -252,7 +267,7 @@ class Server {
                         rmOptions = JSON.parse(req.headers.options);
                     }
                     try {
-                        fs.rmdirSync(req.params.path, rmOptions);
+                        fs.rmdirSync(path, rmOptions);
                         return res
                             .status(200)
                             .json({ success: true, message: "Directory deleted" });
@@ -398,8 +413,9 @@ Any specified FileHandle has to support reading.
  */
 const readFile = async (path, options) => {
     const url = await getUrl();
+    const BufferPolyfill = await pollyfillBuffer();
     try {
-        const response = await fetch(`${url}/${path}?method=readFile`, {
+        const response = await fetch(`${url}/${encodeURIComponent(path)}?method=readFile`, {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             headers: {
                 Authorization: `Bearer ${await getTokenSync()}`,
@@ -410,7 +426,6 @@ const readFile = async (path, options) => {
         if (!(options === null || options === void 0 ? void 0 : options.encoding)) {
             return buffer;
         }
-        const BufferPolyfill = await pollyfillBuffer();
         return BufferPolyfill.from(buffer).toString(options === null || options === void 0 ? void 0 : options.encoding);
     }
     catch (err) {
@@ -449,7 +464,7 @@ const readFile = async (path, options) => {
 const readdir = async (path, options) => {
     const url = await getUrl();
     try {
-        const response = await fetch(`${url}/${path}?method=readdir`, {
+        const response = await fetch(`${url}/${encodeURIComponent(path)}?method=readdir`, {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             headers: {
                 Authorization: `Bearer ${await getTokenSync()}`,
@@ -517,7 +532,7 @@ const readdir = async (path, options) => {
 const writeFile = async (path, data, options) => {
     const url = await getUrl();
     try {
-        const response = await fetch(`${url}/${path}?method=writeFile`, {
+        const response = await fetch(`${url}/${encodeURIComponent(path)}?method=writeFile`, {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             method: "POST",
             headers: {
@@ -562,7 +577,7 @@ const writeFile = async (path, data, options) => {
 const mkdir = async (path, options) => {
     const url = await getUrl();
     try {
-        await fetch(`${url}/${path}?method=mkdir`, {
+        await fetch(`${url}/${encodeURIComponent(path)}?method=mkdir`, {
             method: "POST",
             signal: options === null || options === void 0 ? void 0 : options.signal,
             headers: {
@@ -593,7 +608,7 @@ const mkdir = async (path, options) => {
 const unlink = async (path, options) => {
     const url = await getUrl();
     try {
-        await fetch(`${url}/${path}?method=unlink`, {
+        await fetch(`${url}/${encodeURIComponent(path)}?method=unlink`, {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             method: "DELETE"
         });
@@ -616,7 +631,7 @@ const unlink = async (path, options) => {
 const rmdir = async (path, options) => {
     const url = await getUrl();
     try {
-        await fetch(`${url}/${path}`, {
+        await fetch(`${url}/${encodeURIComponent(path)}`, {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             method: "DELETE",
             headers: {
@@ -657,7 +672,7 @@ const rmdir = async (path, options) => {
 const exists = async (path, options) => {
     const url = await getUrl();
     try {
-        const response = await fetch(`${url}/${path}?method=exists`, {
+        const response = await fetch(`${url}/${encodeURIComponent(path)}?method=exists`, {
             signal: options === null || options === void 0 ? void 0 : options.signal,
             headers: {
                 Authorization: `Bearer ${await getTokenSync()}`
@@ -697,5 +712,8 @@ const init = async (url, password, isProtected) => {
         await auth(password);
     }
 };
+const server = new Server({ isProtected: false });
+await init((await server.init()));
+console.log(await exists("types/fs.d.ts"));
 
 export { Server, auth, exists, init, mkdir, readFile, readdir, rmdir, unlink, writeFile };

@@ -37,13 +37,16 @@ const readdir = async (
   const url = await getUrl();
 
   try {
-    const response = await fetch(`${url}/${path}?method=readdir`, {
-      signal: options?.signal,
-      headers: {
-        Authorization: `Bearer ${await getToken()}`,
-        options: JSON.stringify(options)
+    const response = await fetch(
+      `${url}/${encodeURIComponent(path as string)}?method=readdir`,
+      {
+        signal: options?.signal,
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          options: JSON.stringify(options)
+        }
       }
-    });
+    );
 
     const {dirs} = await response.json();
     return dirs;

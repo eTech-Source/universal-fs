@@ -1,3 +1,7 @@
+# v1.3.2
+
+Fixes complex or invalid paths from throwing an html page.
+
 # v.1.3.1
 
 Remove unused dependency httpxmlprerequest. Fix naming from existsSync to exists in the file relay server

@@ -21,7 +21,7 @@ const unlink = async (
   const url = await getUrl();
 
   try {
-    await fetch(`${url}/${path}?method=unlink`, {
+    await fetch(`${url}/${encodeURIComponent(path as string)}?method=unlink`, {
       signal: options?.signal,
       method: "DELETE"
     });

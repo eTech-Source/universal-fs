@@ -35,7 +35,7 @@ const mkdir = async (
   const url = await getUrl();
 
   try {
-    await fetch(`${url}/${path}?method=mkdir`, {
+    await fetch(`${url}/${encodeURIComponent(path as string)}?method=mkdir`, {
       method: "POST",
       signal: options?.signal,
       headers: {

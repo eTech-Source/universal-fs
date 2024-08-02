@@ -90,6 +90,7 @@ class Server {
     }
 
     this.app.use((req, res, next) => {
+      const path = decodeURIComponent(req.params.path);
       if (
         !authed &&
         (req.query.method === "writeFile" ||
@@ -105,7 +106,7 @@ class Server {
       const ignoredFile = fs.readFileSync(".gitignore", "utf8").split("\n");
 
       for (const file of ignoredFile) {
-        if (file === req.params.path) {
+        if (file === path) {
           return res.status(403).json({
             error: "The requested resource is not avabile"
           });
@@ -126,7 +127,20 @@ class Server {
       next();
     });
 
+    this.app.use((req, res, next) => {
+      const path = decodeURIComponent(req.params.path);
+      const validPathRegex = /^(\/?(\.{1,2}\/)*[a-zA-Z0-9\-.]+)+$/;
+      if (!validPathRegex.test(path)) {
+        return res.status(400).json({
+          success: false,
+          error: `Path ${path} is not valid`
+        });
+      }
+      next();
+    });
+
     this.app.get("/:path", async (req, res) => {
+      const path = decodeURIComponent(req.params.path);
       switch (req.query.method) {
         case "readFile":
           let fileOptions: {
@@ -140,7 +154,7 @@ class Server {
           }
 
           try {
-            fileBuffer = fs.readFileSync(req.params.path, fileOptions);
+            fileBuffer = fs.readFileSync(path, fileOptions);
             return res.json({success: true, buffer: fileBuffer});
           } catch (err: any) {
             return res.status(500).json({success: false, error: err});
@@ -161,14 +175,14 @@ class Server {
           }
 
           try {
-            dirs = fs.readdirSync(req.params.path, dirOptions);
+            dirs = fs.readdirSync(path, dirOptions);
             return res.json({success: true, dirs: dirs});
           } catch (err: any) {
             return res.status(500).json({success: false, error: err});
           }
         case "exists":
           try {
-            const exists = fs.existsSync(req.params.path);
+            const exists = fs.existsSync(path);
             return res.json({success: true, exists: exists});
           } catch (err: any) {
             return res.status(500).json({success: false, error: err});
@@ -180,6 +194,7 @@ class Server {
     });
 
     this.app.post("/:path", (req, res) => {
+      const path = decodeURIComponent(req.params.path);
       switch (req.query.method) {
         case "writeFile":
           let writeOptions: fs.WriteFileOptions | undefined;
@@ -188,7 +203,7 @@ class Server {
           }
 
           try {
-            fs.writeFileSync(req.params.path, req.body.contents, writeOptions);
+            fs.writeFileSync(path, req.body.contents, writeOptions);
             return res
               .status(200)
               .json({success: true, message: "File written"});
@@ -205,7 +220,7 @@ class Server {
           }
 
           try {
-            fs.mkdirSync(req.params.path, mkdirOptions);
+            fs.mkdirSync(path, mkdirOptions);
             return res
               .status(200)
               .json({success: true, message: "Directory created"});
@@ -219,10 +234,11 @@ class Server {
     });
 
     this.app.delete("/:path", (req, res) => {
+      const path = decodeURIComponent(req.params.path);
       switch (req.query.method) {
         case "unlink":
           try {
-            fs.unlinkSync(req.params.path);
+            fs.unlinkSync(path);
             return res
               .status(200)
               .json({success: true, message: "File deleted"});
@@ -237,7 +253,7 @@ class Server {
           }
 
           try {
-            fs.rmdirSync(req.params.path, rmOptions);
+            fs.rmdirSync(path, rmOptions);
             return res
               .status(200)
               .json({success: true, message: "Directory deleted"});
