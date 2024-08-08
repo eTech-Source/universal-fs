@@ -41,6 +41,17 @@ const init = async (url: string, password?: string, isProtected?: boolean) => {
     await auth(password);
   }
 };
+const server = new Server({
+  isProtected: false,
+  startServer: (app): string => {
+    app.listen(3000, () => {
+      console.info(`listening on port 3000`);
+    });
+
+    return `http://localhost:3000`;
+  }
+});
+await init((await server.init()) as string);
 
 export {
   init,
