@@ -712,8 +712,5 @@ const init = async (url, password, isProtected) => {
         await auth(password);
     }
 };
-const server = new Server({ isProtected: false });
-await init((await server.init()));
-console.log(await exists("types/fs.d.ts"));
 
 export { Server, auth, exists, init, mkdir, readFile, readdir, rmdir, unlink, writeFile };
