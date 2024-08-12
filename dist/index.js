@@ -712,15 +712,5 @@ const init = async (url, password, isProtected) => {
         await auth(password);
     }
 };
-const server = new Server({
-    isProtected: false,
-    startServer: (app) => {
-        app.listen(3000, () => {
-            console.info(`listening on port 3000`);
-        });
-        return `http://localhost:3000`;
-    }
-});
-await init((await server.init()));
 
 export { Server, auth, exists, init, mkdir, readFile, readdir, rmdir, unlink, writeFile };
