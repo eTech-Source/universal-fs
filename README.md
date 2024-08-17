@@ -1,1 +1,1 @@
-packages/universal-fs/README.md
+./packages/universal-fs/README.md
