@@ -3,7 +3,7 @@ import copy from "rollup-plugin-copy";
 
 export default [
   {
-    input: "src/index.ts",
+    input: "index.ts",
     output: [
       {
         dir: "dist",

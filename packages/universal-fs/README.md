@@ -1,3 +1,9 @@
+# Warning!
+
+<div style="background-color: yellow; color: black; min-height: 100px;">
+  <h2>This is the canary version of universal-fs. Updates happen often here with no promise for stability. Please see the stable version for production.</h2>
+</div>
+
 # universal-fs
 
 Allows a client or server to access the file system in the current codebase or a different one.

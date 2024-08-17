@@ -304,7 +304,6 @@ class Server {
       addr: this.port,
       authtoken: process.env.NGROK_AUTHTOKEN
     });
-
     return listener.url();
   }
 

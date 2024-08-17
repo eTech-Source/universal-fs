@@ -1,3 +1,11 @@
+# generation
 node_modules
-.env
+dist
+
+# secrets
 .fs
+.env
+
+# nx
+.nx/cache
+.nx/workspace-data
