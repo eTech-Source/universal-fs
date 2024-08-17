@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "dev": {
+      "outputs": [
+        "{projectRoot}/packages/universal-fs/dist"
+      ],
+      "cache": true
+    }
+  },
+  "defaultBase": "main",
+  "nxCloudAccessToken": "ZjY5ZDZjYjctOTBmZC00ZWM4LWJjOTYtZWQ4NmRjNDIxMzI0fHJlYWQtd3JpdGU="
+}
