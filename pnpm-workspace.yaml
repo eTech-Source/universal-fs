@@ -1,2 +1,3 @@
 packages:
 - packages/universal-fs
+- apps/docs
