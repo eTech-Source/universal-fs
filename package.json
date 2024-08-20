@@ -7,7 +7,7 @@
     "dev": "pnpx nx run universal-fs:dev",
     "build": "pnpx nx run universal-fs:build",
     "docs:dev": "pnpx nx run docs:dev",
-    "docs:build": "pnpx nx run docs:build && pnpm docs:start",
+    "docs:build": "pnpx nx run docs:build && pnpm nx run docs:start",
     "prepare": "husky install",
     "lint:check": "pnpx eslint",
     "lint:fix": "pnpx eslint --fix",
