@@ -4,6 +4,10 @@
   "description": "Allows a client or server to access the file system in the current codebase or a different one.",
   "type": "module",
   "scripts": {
+    "dev": "pnpx nx run universal-fs:dev",
+    "build": "pnpx nx run universal-fs:build",
+    "docs:dev": "pnpx nx run docs:dev",
+    "docs:build": "pnpx nx run docs:build && pnpm nx run docs:start",
     "prepare": "husky install",
     "lint:check": "pnpx eslint",
     "lint:fix": "pnpx eslint --fix",
@@ -12,9 +16,9 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx,astro,mjs,cjs,spec.ts,spec.tsx}": "eslint --cache --fix",
-    "*.{js,css,md,ts,tsx,astro,mjs,cjs}": "prettier --write",
+    "*.{js,css,md,ts,tsx,astro,mjs,cjs}": "prettier --write --no-error-on-unmatched-pattern",
     "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,css,md}": "prettier --write --no-error-on-unmatched-pattern"
   },
   "repository": {
     "type": "git",

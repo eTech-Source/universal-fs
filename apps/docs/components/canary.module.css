@@ -1,0 +1,9 @@
+.canary {
+  background-color: #f5a524;
+  color: black;
+  font-weight: bold;
+  min-width: 5rem;
+  border-radius: 3px;
+  min-height: 1.5rem;
+  padding: 1px;
+}
