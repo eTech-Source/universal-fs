@@ -1,6 +1,9 @@
 //@ts-check
 
+import {exec} from "child_process";
 import fs from "fs";
+
+exec("npm run build");
 
 const rmExtra = async () => {
   const extra = ["client", "helpers", "server", "types"];
