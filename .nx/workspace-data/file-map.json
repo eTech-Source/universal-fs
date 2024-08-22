@@ -1,0 +1,410 @@
+{
+  "version": "6.0",
+  "nxVersion": "19.6.0",
+  "deps": {
+    "@changesets/cli": "^2.27.7",
+    "universal-fs": "link:/Users/ekrich/git/universal-fs/packages/universal-fs",
+    "@eslint/compat": "^1.1.1",
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.10",
+    "@types/xmlhttprequest": "^1.8.2",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.14.1",
+    "eslint": "^9.5.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
+    "nx": "19.6.0",
+    "prettier": "^3.3.2",
+    "tslib": "^2.6.3",
+    "typedoc": "^0.26.2",
+    "typescript": "^5.5.2"
+  },
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [],
+    "projectFileMap": {
+      "docs": [
+        {
+          "file": "apps/docs/.gitignore",
+          "hash": "1862265637977512098"
+        },
+        {
+          "file": "apps/docs/LICENSE",
+          "hash": "18225185169353320130"
+        },
+        {
+          "file": "apps/docs/README.md",
+          "hash": "9634934651853032937"
+        },
+        {
+          "file": "apps/docs/components/Canary.tsx",
+          "hash": "16866486671074077552"
+        },
+        {
+          "file": "apps/docs/components/Sandbox.tsx",
+          "hash": "13013925442588459419"
+        },
+        {
+          "file": "apps/docs/components/canary.module.css",
+          "hash": "613513219330462516"
+        },
+        {
+          "file": "apps/docs/next-env.d.ts",
+          "hash": "5909181270615354023"
+        },
+        {
+          "file": "apps/docs/next.config.js",
+          "hash": "11751759295515615697"
+        },
+        {
+          "file": "apps/docs/package.json",
+          "hash": "3239852159764896514",
+          "deps": [
+            "npm:@types/node",
+            "npm:typescript",
+            "npm:next",
+            "npm:nextra",
+            "npm:nextra-theme-docs",
+            "npm:react",
+            "npm:react-dom"
+          ]
+        },
+        {
+          "file": "apps/docs/pages/_meta.json",
+          "hash": "1667537892582854686"
+        },
+        {
+          "file": "apps/docs/pages/config/_meta.json",
+          "hash": "14982659144212232933"
+        },
+        {
+          "file": "apps/docs/pages/config/noNgrok.mdx",
+          "hash": "6141062472649922885"
+        },
+        {
+          "file": "apps/docs/pages/config/relayServer.mdx",
+          "hash": "18355851407751489616"
+        },
+        {
+          "file": "apps/docs/pages/config/unprotected.mdx",
+          "hash": "9483867449427207677"
+        },
+        {
+          "file": "apps/docs/pages/index.mdx",
+          "hash": "3005112010070840151"
+        },
+        {
+          "file": "apps/docs/pages/methods/_meta.json",
+          "hash": "15482377619549347778"
+        },
+        {
+          "file": "apps/docs/pages/methods/exists.mdx",
+          "hash": "1571955300971900717"
+        },
+        {
+          "file": "apps/docs/pages/methods/index.mdx",
+          "hash": "3293783027168367301"
+        },
+        {
+          "file": "apps/docs/pages/methods/mkdir.mdx",
+          "hash": "13416087948150921643"
+        },
+        {
+          "file": "apps/docs/pages/methods/readFile.mdx",
+          "hash": "12808815501249708629"
+        },
+        {
+          "file": "apps/docs/pages/methods/readdir.mdx",
+          "hash": "8277789383236816863"
+        },
+        {
+          "file": "apps/docs/pages/methods/rmdir.mdx",
+          "hash": "1154144815249755637"
+        },
+        {
+          "file": "apps/docs/pages/methods/unlink.mdx",
+          "hash": "10975806457782720718"
+        },
+        {
+          "file": "apps/docs/pages/methods/writeFile.mdx",
+          "hash": "14210142792726847804"
+        },
+        {
+          "file": "apps/docs/pages/setup.mdx",
+          "hash": "7929583220554520775"
+        },
+        {
+          "file": "apps/docs/pnpm-lock.yaml",
+          "hash": "8070504930963115152"
+        },
+        {
+          "file": "apps/docs/project.json",
+          "hash": "11602425332410602550"
+        },
+        {
+          "file": "apps/docs/theme.config.tsx",
+          "hash": "2977280250753186834"
+        },
+        {
+          "file": "apps/docs/tsconfig.json",
+          "hash": "16868689304184543369"
+        },
+        {
+          "file": "apps/docs/types/nextra-theme.docs.d.ts",
+          "hash": "16640849359839582438"
+        }
+      ],
+      "@universal-fs/src": [
+        {
+          "file": ".changeset/README.md",
+          "hash": "4888845876018830777"
+        },
+        {
+          "file": ".changeset/config.json",
+          "hash": "13730568573234122122"
+        },
+        {
+          "file": ".env.example",
+          "hash": "3274760977662072854"
+        },
+        {
+          "file": ".eslintcache",
+          "hash": "11195495873735127966"
+        },
+        {
+          "file": ".github/workflows/check-lint.yaml",
+          "hash": "9245742230955170850"
+        },
+        {
+          "file": ".github/workflows/gitleaks.yaml",
+          "hash": "7300589615367400916"
+        },
+        {
+          "file": ".gitignore",
+          "hash": "6390858595160496272"
+        },
+        {
+          "file": ".gitleaksignore",
+          "hash": "1054597475219614237"
+        },
+        {
+          "file": ".husky/pre-commit",
+          "hash": "8906304965158091741"
+        },
+        {
+          "file": ".prettierignore",
+          "hash": "5016340533138913304"
+        },
+        {
+          "file": ".prettierrc.json",
+          "hash": "5624549710406560254"
+        },
+        {
+          "file": ".vscode/settings.json",
+          "hash": "12915142636812792293"
+        },
+        {
+          "file": "CODE_OF_CONDUCT.md",
+          "hash": "15954118466271681979"
+        },
+        {
+          "file": "CONTRIBUTING.md",
+          "hash": "6183829152310098473"
+        },
+        {
+          "file": "LEGACY_DOCS.md",
+          "hash": "4642987941396960616"
+        },
+        {
+          "file": "LICENSE.txt",
+          "hash": "8275046872059260915"
+        },
+        {
+          "file": "README.md",
+          "hash": "9310995151650892798"
+        },
+        {
+          "file": "SECURITY.md",
+          "hash": "617060806175946306"
+        },
+        {
+          "file": "eslint.config.cjs",
+          "hash": "14284100295496578215"
+        },
+        {
+          "file": "nx.json",
+          "hash": "5694051195006759557"
+        },
+        {
+          "file": "package.json",
+          "hash": "3261780468595731489",
+          "deps": [
+            "npm:@eslint/compat",
+            "npm:@types/bcrypt",
+            "npm:@types/express",
+            "npm:@types/node",
+            "npm:@types/xmlhttprequest",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:eslint",
+            "npm:husky",
+            "npm:lint-staged",
+            "npm:nx",
+            "npm:prettier",
+            "npm:tslib",
+            "npm:typedoc",
+            "npm:typescript",
+            "npm:@changesets/cli",
+            "universal-fs"
+          ]
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "hash": "14371359448259429093"
+        },
+        {
+          "file": "pnpm-workspace.yaml",
+          "hash": "11981784822562632010"
+        },
+        {
+          "file": "project.json",
+          "hash": "1960902256856417347"
+        },
+        {
+          "file": "tsconfig.json",
+          "hash": "9091162324940671850"
+        }
+      ],
+      "universal-fs": [
+        {
+          "file": "packages/universal-fs/CHANGELOG.md",
+          "hash": "3125609371374747235"
+        },
+        {
+          "file": "packages/universal-fs/README.md",
+          "hash": "9310995151650892798"
+        },
+        {
+          "file": "packages/universal-fs/client/auth.ts",
+          "hash": "4598399034751299091"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/exists/exists.ts",
+          "hash": "9900014017499653572"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/exists/types/exists.ts",
+          "hash": "1194019383456377783"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/mkdir/mkdir.ts",
+          "hash": "7747531347967211416"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/mkdir/types/mkdir.ts",
+          "hash": "7388272118469081381"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/readFile/readFile.ts",
+          "hash": "3095613693438371667"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/readFile/types/readFile.ts",
+          "hash": "5549755916200476660"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/readdir/readdir.ts",
+          "hash": "9082123671256175042"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/readdir/types/readdir.ts",
+          "hash": "14159691283289009329"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/rmdir/rmdir.ts",
+          "hash": "14795126184427491964"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/rmdir/types/rmdir.ts",
+          "hash": "15036462742805344168"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/unlink/types/unlink.ts",
+          "hash": "8764904082474918351"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/unlink/unlink.ts",
+          "hash": "7549301832730615541"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/writeFile/types/writeFile.ts",
+          "hash": "6271313148424598612"
+        },
+        {
+          "file": "packages/universal-fs/client/operations/writeFile/writeFile.ts",
+          "hash": "7743743447228426576"
+        },
+        {
+          "file": "packages/universal-fs/helpers/getCookie.ts",
+          "hash": "11484773698417633894"
+        },
+        {
+          "file": "packages/universal-fs/helpers/getToken.ts",
+          "hash": "2583030690472821127"
+        },
+        {
+          "file": "packages/universal-fs/helpers/getUrl.ts",
+          "hash": "885781259484665016"
+        },
+        {
+          "file": "packages/universal-fs/helpers/isJson.ts",
+          "hash": "6795396425523462458"
+        },
+        {
+          "file": "packages/universal-fs/helpers/pollyfillBuffer.ts",
+          "hash": "13970214622499822783"
+        },
+        {
+          "file": "packages/universal-fs/index.ts",
+          "hash": "13422903490970820348"
+        },
+        {
+          "file": "packages/universal-fs/package.json",
+          "hash": "16313778403655135583",
+          "deps": [
+            "npm:dts-bundle-generator",
+            "npm:rollup-plugin-copy",
+            "npm:rollup-plugin-typescript2",
+            "npm:@ngrok/ngrok",
+            "npm:bcrypt",
+            "npm:browser-or-node",
+            "npm:dotenv",
+            "npm:express"
+          ]
+        },
+        {
+          "file": "packages/universal-fs/project.json",
+          "hash": "9636063047224549286"
+        },
+        {
+          "file": "packages/universal-fs/rollup.config.mjs",
+          "hash": "8614891235832671183"
+        },
+        {
+          "file": "packages/universal-fs/scripts/postinstall.js",
+          "hash": "18027562087050168624"
+        },
+        {
+          "file": "packages/universal-fs/server/server.ts",
+          "hash": "5912828710094392523"
+        },
+        {
+          "file": "packages/universal-fs/types/fs.d.ts",
+          "hash": "7857964007255008863"
+        }
+      ]
+    }
+  }
+}

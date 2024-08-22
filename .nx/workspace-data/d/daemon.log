@@ -1,0 +1,39 @@
+[NX Daemon Server] - 2024-08-22T20:16:48.017Z - Started listening on: /var/folders/gf/r39jbchs4sdf_mh_hn12sdz80000gn/T/f9551d5061c2841daad9/d.sock
+[NX Daemon Server] - 2024-08-22T20:16:48.018Z - [WATCHER]: Subscribed to changes within: /Users/ekrich/git/universal-fs (native)
+[NX Daemon Server] - 2024-08-22T20:16:48.021Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-08-22T20:16:48.021Z - Established a connection. Number of open connections: 2
+[NX Daemon Server] - 2024-08-22T20:16:48.022Z - Closed a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-08-22T20:16:48.022Z - [REQUEST]: Client Request for Project Graph Received
+[NX Daemon Server] - 2024-08-22T20:16:48.154Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX Daemon Server] - 2024-08-22T20:16:48.154Z - [REQUEST]: 
+[NX Daemon Server] - 2024-08-22T20:16:48.154Z - [REQUEST]: 
+[NX Daemon Server] - 2024-08-22T20:16:48.156Z - Time taken for 'loadNxPlugins' 130.62416599999997ms
+[NX Daemon Server] - 2024-08-22T20:16:48.424Z - Time taken for 'build-project-configs' 260.07945799999993ms
+[NX Daemon Server] - 2024-08-22T20:16:48.443Z - [SYNC]: collect registered sync generators
+[NX Daemon Server] - 2024-08-22T20:16:48.443Z - [SYNC]: scheduling: []
+[NX Daemon Server] - 2024-08-22T20:16:48.443Z - [REQUEST]: Responding to the client. project-graph
+[NX Daemon Server] - 2024-08-22T20:16:48.444Z - Time taken for 'total for creating and serializing project graph' 420.620667ms
+[NX Daemon Server] - 2024-08-22T20:16:48.444Z - Done responding to the client project-graph
+[NX Daemon Server] - 2024-08-22T20:16:48.444Z - Handled REQUEST_PROJECT_GRAPH. Handling time: 421. Response time: 1.
+[NX Daemon Server] - 2024-08-22T20:16:48.446Z - [REQUEST]: Responding to the client. handleContextFileData
+[NX Daemon Server] - 2024-08-22T20:16:48.446Z - Done responding to the client handleContextFileData
+[NX Daemon Server] - 2024-08-22T20:16:48.446Z - Handled GET_CONTEXT_FILE_DATA. Handling time: 0. Response time: 0.
+[NX Daemon Server] - 2024-08-22T20:16:48.446Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2024-08-22T20:16:48.448Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-08-22T20:16:48.448Z - Established a connection. Number of open connections: 2
+[NX Daemon Server] - 2024-08-22T20:16:48.448Z - Closed a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-08-22T20:16:48.448Z - [REQUEST]: Client Request for Project Graph Received
+[NX Daemon Server] - 2024-08-22T20:16:48.448Z - [REQUEST]: Responding to the client. project-graph
+[NX Daemon Server] - 2024-08-22T20:16:48.449Z - Time taken for 'total for creating and serializing project graph' 0.1516669999999749ms
+[NX Daemon Server] - 2024-08-22T20:16:48.449Z - Done responding to the client project-graph
+[NX Daemon Server] - 2024-08-22T20:16:48.449Z - Handled REQUEST_PROJECT_GRAPH. Handling time: 0. Response time: 1.
+[NX Daemon Server] - 2024-08-22T20:16:48.450Z - [REQUEST]: Client Request for Project Graph Received
+[NX Daemon Server] - 2024-08-22T20:16:48.450Z - [REQUEST]: Responding to the client. project-graph
+[NX Daemon Server] - 2024-08-22T20:16:48.451Z - Time taken for 'total for creating and serializing project graph' 0.062374999999974534ms
+[NX Daemon Server] - 2024-08-22T20:16:48.451Z - Done responding to the client project-graph
+[NX Daemon Server] - 2024-08-22T20:16:48.451Z - Handled REQUEST_PROJECT_GRAPH. Handling time: 0. Response time: 1.
+[NX Daemon Server] - 2024-08-22T20:16:48.452Z - Established a connection. Number of open connections: 2
+[NX Daemon Server] - 2024-08-22T20:17:30.708Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2024-08-22T20:17:30.708Z - Closed a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-08-22T20:17:30.708Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2024-08-22T20:17:30.708Z - [WATCHER]: Stopping the watcher for /Users/ekrich/git/universal-fs (sources)
