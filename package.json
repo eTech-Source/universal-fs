@@ -1,24 +1,24 @@
 {
   "name": "universal-fs",
-  "version": "1.3.4",
+  "version": "canary-1",
   "description": "Allows a client or server to access the file system in the current codebase or a different one.",
-  "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "npx rollup -cw & npx dts-bundle-generator src/index.ts --out-file dist/index.d.ts --no-check & nodemon dist/index.js",
-    "build": "npx rollup -c & npx dts-bundle-generator src/index.ts --out-file dist/index.d.ts --no-check",
+    "dev": "pnpx nx run universal-fs:dev",
+    "build": "pnpx nx run universal-fs:build",
+    "docs:dev": "pnpx nx run docs:dev",
+    "docs:build": "pnpx nx run docs:build && pnpm nx run docs:start",
     "prepare": "husky install",
-    "lint:check": "npx eslint .",
-    "lint:fix": "npx eslint . --fix",
-    "format:check": "npx prettier .",
-    "format:fix": "npx prettier --write",
-    "prepublish": "npm build"
+    "lint:check": "pnpx eslint",
+    "lint:fix": "pnpx eslint --fix",
+    "format:check": "pnpx prettier .",
+    "format:fix": "pnpx prettier --write"
   },
   "lint-staged": {
     "*.{js,ts,tsx,astro,mjs,cjs,spec.ts,spec.tsx}": "eslint --cache --fix",
-    "*.{js,css,md,ts,tsx,astro,mjs,cjs}": "prettier --write",
+    "*.{js,css,md,ts,tsx,astro,mjs,cjs}": "prettier --write --no-error-on-unmatched-pattern",
     "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,css,md}": "prettier --write --no-error-on-unmatched-pattern"
   },
   "repository": {
     "type": "git",
@@ -35,29 +35,25 @@
   },
   "homepage": "https://github.com/eTech-Source/universal-fs#readme",
   "devDependencies": {
+    "@eslint/compat": "^1.1.1",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.10",
     "@types/xmlhttprequest": "^1.8.2",
     "@typescript-eslint/eslint-plugin": "^7.14.1",
     "@typescript-eslint/parser": "^7.14.1",
-    "dts-bundle-generator": "^9.5.1",
     "eslint": "^9.5.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
+    "nx": "19.6.0",
     "prettier": "^3.3.2",
-    "rollup-plugin-copy": "^3.5.0",
-    "rollup-plugin-typescript2": "^0.36.0",
     "tslib": "^2.6.3",
     "typedoc": "^0.26.2",
     "typescript": "^5.5.2"
   },
+  "nx": {},
   "dependencies": {
-    "@ngrok/ngrok": "^1.3.0",
-    "bcrypt": "^5.1.1",
-    "browser-or-node": "^3.0.0",
-    "buffer": "^6.0.3",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "@changesets/cli": "^2.27.7",
+    "universal-fs": "link:/Users/ekrich/git/universal-fs/packages/universal-fs"
   }
 }

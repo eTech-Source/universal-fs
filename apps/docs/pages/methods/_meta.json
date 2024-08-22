@@ -1,0 +1,10 @@
+{
+    "index": "What is a method?",
+    "exists": "exists",
+    "mkdir": "mkdir",
+    "readdir": "readdir",
+    "readFile": "readFile",
+    "rmdir": "rmdir",
+    "unlink": "unlink",
+    "writeFile": "writeFile"
+}
