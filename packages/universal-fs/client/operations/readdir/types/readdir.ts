@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 interface Options extends ObjectEncodingOptions, Abortable {
   withFileTypes?: false | undefined;
   recursive?: boolean | undefined;

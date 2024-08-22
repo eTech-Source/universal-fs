@@ -2,7 +2,6 @@ import auth from "./client/auth";
 import dotenv from "dotenv";
 import Server from "./server/server";
 import {isBrowser, isNode} from "browser-or-node";
-import fs from "fs";
 import readFile from "./client/operations/readFile/readFile";
 import readdir from "./client/operations/readdir/readdir";
 import writeFile from "./client/operations/writeFile/writeFile";
@@ -10,6 +9,12 @@ import mkdir from "./client/operations/mkdir/mkdir";
 import unlink from "./client/operations/unlink/unlink";
 import rmdir from "./client/operations/rmdir/rmdir";
 import exists from "./client/operations/exists/exists";
+
+let fs: any;
+
+if (isNode) {
+  fs = await import("fs");
+}
 
 dotenv.config({path: ".env"});
 

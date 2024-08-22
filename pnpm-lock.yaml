@@ -11,6 +11,9 @@ importers:
       '@changesets/cli':
         specifier: ^2.27.7
         version: 2.27.7
+      universal-fs:
+        specifier: link:/Users/ekrich/git/universal-fs/packages/universal-fs
+        version: link:packages/universal-fs
     devDependencies:
       '@eslint/compat':
         specifier: ^1.1.1

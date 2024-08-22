@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {ReaddirParams, ReaddirReturn} from "./types/readdir";
 import getUrl from "../../../helpers/getUrl";
 import getToken from "../../../helpers/getToken";

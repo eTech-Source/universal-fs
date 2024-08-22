@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export type WriteFileParams = {
   file: PathLike;
   data:

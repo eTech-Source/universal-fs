@@ -1,7 +1,12 @@
 import {isBrowser, isNode} from "browser-or-node";
 import bcrypt from "bcrypt";
 import getCookie from "../helpers/getCookie";
-import fs from "fs";
+
+let fs: any;
+
+if (isNode) {
+  fs = await import("fs");
+}
 
 /**
  * The auth function called in init

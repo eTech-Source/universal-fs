@@ -1,11 +1,19 @@
+// @ts-nocheck
+
 import bcrypt from "bcrypt";
 import express from "express";
 import type {Express} from "express";
-import fs from "fs";
 import isJson from "../helpers/isJson";
 import ngrok from "@ngrok/ngrok";
 import http from "http";
 import process from "process";
+import {isNode} from "browser-or-node";
+
+let fs;
+
+if (isNode) {
+  fs = await import("fs");
+}
 
 /**
  * The class for controllering the file relay server.

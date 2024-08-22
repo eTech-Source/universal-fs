@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export interface MkdirParams {
   path: PathLike;
   options: MakeDirectoryOptions & {

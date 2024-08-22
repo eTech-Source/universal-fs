@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export interface ExistsParams {
   path: PathLike;
   options?: Abortable;

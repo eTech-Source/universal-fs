@@ -53,6 +53,7 @@
   },
   "nx": {},
   "dependencies": {
-    "@changesets/cli": "^2.27.7"
+    "@changesets/cli": "^2.27.7",
+    "universal-fs": "link:/Users/ekrich/git/universal-fs/packages/universal-fs"
   }
 }

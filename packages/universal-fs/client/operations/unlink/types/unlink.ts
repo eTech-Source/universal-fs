@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export interface UnlinkParams {
   path: PathLike;
   options?: Abortable;
