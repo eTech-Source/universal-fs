@@ -1,64 +1,102 @@
-import bcrypt from "bcrypt";
-import express from "express";
-import type {Express} from "express";
-import fs from "fs";
-import isJson from "../helpers/isJson";
-import ngrok from "@ngrok/ngrok";
+import express, {Express} from "express";
+import {isNode} from "browser-or-node";
 import http from "http";
-import process from "process";
+import dotenv from "dotenv";
 
 /**
- * The class for controllering the file relay server.
+ * The universal-fs file relay server controller
+ * To start the server see @see Server.init
+ * To stop the server see @see Server.stop
  */
-class Server {
-  private app!: Express;
-  private port!: number;
-  private server!: http.Server;
+export default class Server {
+  /**
+   * The value of `express()` used to manipulate express before initiliation
+   */
+  private app: Express;
+
+  /**
+   * The local port univerdal-fs is listening on
+   * @default 3000
+   */
+  public port: number = 3000;
+
+  /**
+   * Whether or not to forward the port to a remote url
+   * Please note this will require an Ngrok account
+   */
+  private withPortForwarding: boolean = true;
+
+  /**
+   * Whether or not the server is protected by a password
+   */
   private isProtected: boolean = true;
 
   /**
-   * An optional custom function to use your own Express server.
-   * @param app - The express app
-   * @param server - The http server
-   * @returns The url of your custom server
+   * An optional custom function to use your own Express server
+   * @deprecated Use `options.withPortForwarding` instead
    */
-  private startServer?:
+  private startServer:
     | ((app: Express, server?: http.Server) => Promise<string> | string)
     | undefined;
 
   /**
-   * The constructor of the class for controllering the file relay server.
-   * @param startServer - An optional custom function to use your own Express server
+   * An http server storing the value of `this.app.listen()`
    */
-  constructor(options?: {
+  private server!: http.Server;
+
+  /**
+   * The universal-fs file relay server
+   * @param options Options to customize the server
+   */
+  constructor(
+    options?: {
+      /**
+       * Whether or not to forward the port to a remote url
+       * Please note this will require an Ngrok account
+       */
+      withPortForwarding?: boolean;
+      /**
+       * Whether or not the server is protected by a password
+       */
+      isProtected?: boolean;
+      /**
+       * The path to your `.env` file
+       */
+      envPath?: string;
+    },
     /**
-     * Whether the server should require a password for readOperations on non-ignored files
-     * @default true
+     * @deprecated Use `options.withPortForwarding` instead. ~~An optional custom function to use your own Express server.~~
      */
-    isProtected?: boolean;
-    /** An optional object with options for configuring the server */
     startServer?: (
       app: Express,
       server?: http.Server
-    ) => Promise<string> | string;
-  }) {
+    ) => Promise<string> | string
+  ) {
+    if (!isNode) {
+      throw new Error("The server must be initialized on the server side");
+    }
+
     this.app = express();
-    this.port = 3000;
-    this.startServer = options?.startServer ?? undefined;
-    this.isProtected = options?.isProtected ?? true;
+    this.withPortForwarding = options?.withPortForwarding ?? true;
+    this.isProtected = options?.isProtected ?? false;
+    this.startServer = startServer ?? undefined;
+
+    if (this.startServer) {
+      console.warn(
+        "startServer is deprecated, use withPortForwarding instead."
+      );
+    }
+
+    dotenv.config({path: options?.envPath || ".env"});
   }
 
   /**
-   * Initilizes the file relay server
-   * @returns The url to the open Ngrok tunnel
-   * @async
+   * Initilizes the server and api routes
+   * @returns The url to the open Ngrok tunnel or the local port when port forwarding is disabled
    */
   public async init() {
-    this.app.use(express.json());
-    let authed = false;
-
     if (this.isProtected) {
-      this.app.use((req, res, next) => {
+      this.app.use(async (req, res, next) => {
         if (!process.env.UNIVERSAL_FS_PASSWORD) {
           return res.status(401).json({
             success: false,
@@ -76,235 +114,206 @@ class Server {
 
         const token = req.headers.authorization.replace(/^Bearer\s/, "");
 
+        const bcrypt = await import("bcrypt");
+
         if (!bcrypt.compareSync(process.env.UNIVERSAL_FS_PASSWORD, token)) {
           return res.status(401).json({
             success: false,
             error: "Unauthorized request"
           });
         }
-
-        authed = true;
-
         next();
       });
     }
 
-    this.app.use((req, res, next) => {
-      const path = decodeURIComponent(req.params.path);
-      if (
-        !authed &&
-        (req.query.method === "writeFile" ||
-          req.query.method === "mkdir" ||
-          req.query.method === "unlink" ||
-          req.query.method === "rmdir")
-      ) {
-        throw new Error(
-          "ILLEGAL METHOD: you cannot use write or delete on a non-protected server"
-        );
-      }
-
-      const ignoredFile = fs.readFileSync(".gitignore", "utf8").split("\n");
-
-      for (const file of ignoredFile) {
-        if (file === path) {
-          return res.status(403).json({
-            error: "The requested resource is not avabile"
-          });
-        }
-      }
-
-      if (!req.query.method || req.query.method === "") {
-        return res.status(422).json({
-          error: "A method is required"
-        });
-      }
-
-      if (req.method === "POST" && !req.body) {
-        return res.status(422).json({
-          error: "A body is required on post requests"
-        });
-      }
-      next();
-    });
-
-    this.app.use((req, res, next) => {
-      const path = decodeURIComponent(req.params.path);
-      const validPathRegex = /^(\/?(\.{1,2}\/)*[a-zA-Z0-9\-.]+)+$/;
-      if (!validPathRegex.test(path)) {
-        return res.status(400).json({
-          success: false,
-          error: `Path ${path} is not valid`
-        });
-      }
-      next();
-    });
-
-    this.app.get("/:path", async (req, res) => {
-      const path = decodeURIComponent(req.params.path);
-      switch (req.query.method) {
-        case "readFile":
-          let fileOptions: {
-            encoding?: null | undefined;
-            flag?: string | undefined;
-          } | null = null;
-          let fileBuffer: Buffer | null = null;
-
-          if (isJson(req.headers.options as string)) {
-            fileOptions = JSON.parse(req.headers.options as string);
-          }
-
-          try {
-            fileBuffer = fs.readFileSync(path, fileOptions);
-            return res.json({success: true, buffer: fileBuffer});
-          } catch (err: any) {
-            return res.status(500).json({success: false, error: err});
-          }
-        case "readdir":
-          let dirs: string[] | null = null;
-          let dirOptions:
-            | BufferEncoding
-            | {
-                encoding: BufferEncoding | null;
-                withFileTypes?: false | undefined;
-                recursive?: boolean | undefined;
-              }
-            | null = null;
-
-          if (isJson(req.headers.options as string)) {
-            dirOptions = JSON.parse(req.headers.options as string);
-          }
-
-          try {
-            dirs = fs.readdirSync(path, dirOptions);
-            return res.json({success: true, dirs: dirs});
-          } catch (err: any) {
-            return res.status(500).json({success: false, error: err});
-          }
-        case "exists":
-          try {
-            const exists = fs.existsSync(path);
-            return res.json({success: true, exists: exists});
-          } catch (err: any) {
-            return res.status(500).json({success: false, error: err});
-          }
-        default:
-          // This should never trigger because of the first check
-          return res.status(422).json({error: "Method not found"});
-      }
-    });
-
-    this.app.post("/:path", (req, res) => {
-      const path = decodeURIComponent(req.params.path);
-      switch (req.query.method) {
-        case "writeFile":
-          let writeOptions: fs.WriteFileOptions | undefined;
-          if (isJson(req.headers.options as string)) {
-            writeOptions = JSON.parse(req.headers.options as string);
-          }
-
-          try {
-            fs.writeFileSync(path, req.body.contents, writeOptions);
-            return res
-              .status(200)
-              .json({success: true, message: "File written"});
-          } catch (err: any) {
-            return res.status(500).json({success: false, error: err});
-          }
-        case "mkdir":
-          let mkdirOptions:
-            | (fs.MakeDirectoryOptions & {recursive?: false | undefined})
-            | null = null;
-
-          if (isJson(req.headers.options as string)) {
-            mkdirOptions = JSON.parse(req.headers.options as string);
-          }
-
-          try {
-            fs.mkdirSync(path, mkdirOptions);
-            return res
-              .status(200)
-              .json({success: true, message: "Directory created"});
-          } catch (err: any) {
-            return res.status(500).json({success: false, error: err});
-          }
-
-        default:
-          return res.status(422).json({error: "Method not found"});
-      }
-    });
-
-    this.app.delete("/:path", (req, res) => {
-      const path = decodeURIComponent(req.params.path);
-      switch (req.query.method) {
-        case "unlink":
-          try {
-            fs.unlinkSync(path);
-            return res
-              .status(200)
-              .json({success: true, message: "File deleted"});
-          } catch (err: any) {
-            return res.status(500).json({success: false, error: err});
-          }
-        case "rmdir":
-          let rmOptions: fs.RmOptions | undefined = undefined;
-
-          if (isJson(req.headers.options as string)) {
-            rmOptions = JSON.parse(req.headers.options as string);
-          }
-
-          try {
-            fs.rmdirSync(path, rmOptions);
-            return res
-              .status(200)
-              .json({success: true, message: "Directory deleted"});
-          } catch (err: any) {
-            return res.status(500).json({success: false, error: err});
-          }
-        default:
-          return res.status(422).json({error: "Method not found"});
-      }
-    });
-
     if (this.startServer) {
-      let customUrl;
+      this.startServer(this.app, this.server);
+    }
 
-      if (this.startServer.length === 0) {
-        throw new Error(
-          "A startServer function must accpet at least one argument"
-        );
-      } else if (this.startServer.length === 1) {
-        customUrl = await this.startServer(this.app);
-      } else if (this.startServer.length >= 3) {
-        throw new Error("StartServer has too many arguments");
-      } else {
-        customUrl = await this.startServer(this.app, this.server);
-      }
+    this.port = this.port++;
+    if (this.port > 3050) {
+      console.warn(
+        "The server has already tried to start on 50 different ports. It is reccomended to open a port in the range of 3000 to 3050 for the best performance."
+      );
+    }
 
-      if (!customUrl) {
-        throw new Error("StartServer must return a url");
-      }
-
-      return customUrl;
+    if (this.port > 3100) {
+      throw new Error(
+        "Attempted to start the server on 100 different ports. None were open, aborting."
+      );
     }
 
     try {
-      this.server = this.app.listen(this.port, () => {
-        console.info(`Listening on this.port ${this.port}`);
-      });
+      this.server = this.app.listen(this.port++);
+      this.api();
     } catch (err: any) {
       if (err.code === "EADDRINUSE") {
-        console.info(
-          `this.port ${this.port} is already in use. Trying to connect on this.port ${this.port++}`
+        this.init();
+      }
+
+      throw err;
+    }
+
+    let url = `http://localhost:${this.port}`;
+
+    if (this.withPortForwarding) {
+      const ngrok = await import("@ngrok/ngrok");
+
+      if (!process.env.NGROK_AUTHTOKEN) {
+        throw new Error(
+          "Could not find your NGROK_AUTHTOKEN in your environment variables please add it"
         );
-        this.port = this.port++;
+      }
+
+      url =
+        (
+          await ngrok.connect({
+            addr: this.port,
+            authtoken: process.env.NGROK_AUTHTOKEN
+          })
+        ).url() || "";
+
+      if (!url) {
+        throw new Error("Could not connect to ngrok");
+      }
+
+      return url;
+    }
+  }
+
+  /**
+   * An internal method for universal-fs file system methods
+   * @param method The type of method eg: "readFile"
+   * @param args The arguments for the chosem method
+   * @returns The result of the calling the given method
+   */
+  private async method(method: string, args: unknown[]) {
+    const fsp = await import("fs/promises");
+    const currentMethods: string[] = [];
+
+    Object.keys(fsp).forEach((method) => {
+      currentMethods.push(method);
+    });
+
+    Object.keys(fsp.default).forEach((method) => {
+      currentMethods.push(method);
+    });
+
+    let matchedType = false;
+
+    for (const currentMethod of currentMethods) {
+      if (method === currentMethod) {
+        matchedType = true;
       }
     }
 
-    const listener = await ngrok.connect({
-      addr: this.port,
-      authtoken: process.env.NGROK_AUTHTOKEN
+    if (!matchedType) {
+      throw new Error("Invalid method");
+    }
+
+    const callMethod = Function(
+      `"use strict"; const runMethod = async () => {const {${method}} = await import("fs/promises"); return await ${method}(${JSON.stringify(args).replace("[", "").replace("]", "")});}; return runMethod();`
+    );
+
+    const result = await callMethod();
+    return result;
+  }
+
+  /**
+   * An internal method to handle api requests
+   */
+  private async api() {
+    const catMethods = {
+      GET: [
+        "access",
+        "lstat",
+        "stat",
+        "statfs",
+        "readFile",
+        "readdir",
+        "readlink",
+        "realpath",
+        "watch",
+        "opendir",
+        "glob",
+        "constants"
+      ],
+      PUT: [
+        "chmod",
+        "chown",
+        "lchmod",
+        "lchown",
+        "utimes",
+        "lutimes",
+        "truncate",
+        "writeFile",
+        "appendFile"
+      ],
+      POST: ["mkdir", "mkdtemp", "open", "symlink", "link", "copyFile", "cp"],
+      DELETE: ["rmdir", "unlink", "rename"]
+    };
+
+    const fsMethod = async (
+      // @ts-ignore
+      // Just copying types from express
+      req: Request<{}, any, any, QueryString.ParsedQs, Record<string, any>>,
+      // @ts-ignore
+      // Just copying types from express
+      res: Response<any, Record<string, any>, number>,
+      catMethod: string[]
+    ) => {
+      if (
+        typeof req.headers.method !== "string" ||
+        typeof req.headers.args !== "string"
+      ) {
+        return res
+          .status(422)
+          .json({success: false, error: "Invalid header encoding not found"});
+      }
+
+      const method: string = req.headers.method;
+
+      const args = JSON.parse(req.headers.args || "[]");
+      let matchedMethod = false;
+
+      for (let i = 0; i < catMethod.length; i++) {
+        if (method === catMethod[i]) {
+          matchedMethod = true;
+          break;
+        }
+      }
+
+      if (!matchedMethod) {
+        return res
+          .status(405)
+          .json({success: false, error: "Method not allowed"});
+      }
+
+      try {
+        const data = await this.method(method, args);
+        return res.status(200).json({success: true, data});
+      } catch (err: any) {
+        return res.status(500).json({success: false, error: err});
+      }
+    };
+
+    this.app.get("/fs", async (req, res) => {
+      await fsMethod(req, res, catMethods.GET);
     });
-    return listener.url();
+
+    if (!this.isProtected) {
+      this.app.post("/fs", async (req, res) => {
+        await fsMethod(req, res, catMethods.POST);
+      });
+
+      this.app.put("/fs", async (req, res) => {
+        await fsMethod(req, res, catMethods.PUT);
+      });
+
+      this.app.delete("/fs", async (req, res) => {
+        await fsMethod(req, res, catMethods.DELETE);
+      });
+    }
   }
 
   /**
@@ -314,5 +323,3 @@ class Server {
     this.server.close();
   }
 }
-
-export default Server;

@@ -11,8 +11,6 @@ import unlink from "./client/operations/unlink/unlink";
 import rmdir from "./client/operations/rmdir/rmdir";
 import exists from "./client/operations/exists/exists";
 
-dotenv.config({path: ".env"});
-
 /**
  * Initialize the connection to the relay server. Avabile in most JS environments
  * @param url - The url of the relay server
