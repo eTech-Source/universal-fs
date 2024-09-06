@@ -130,7 +130,7 @@ export default class Server {
       this.startServer(this.app, this.server);
     }
 
-    this.port = this.port++;
+    this.port++;
     if (this.port > 3050) {
       console.warn(
         "The server has already tried to start on 50 different ports. It is reccomended to open a port in the range of 3000 to 3050 for the best performance."
@@ -144,7 +144,7 @@ export default class Server {
     }
 
     try {
-      this.server = this.app.listen(this.port++);
+      this.server = this.app.listen(this.port);
       this.api();
     } catch (err: any) {
       if (err.code === "EADDRINUSE") {
@@ -165,11 +165,14 @@ export default class Server {
         );
       }
 
+      console.log(this.port);
+
       url =
         (
           await ngrok.connect({
             addr: this.port,
-            authtoken: process.env.NGROK_AUTHTOKEN
+            authtoken: process.env.NGROK_AUTHTOKEN,
+            onLogEvent: (data) => console.log(data)
           })
         ).url() || "";
 
