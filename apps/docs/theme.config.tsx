@@ -16,7 +16,7 @@ const config: DocsThemeConfig = {
     link: "https://github.com/eTech-Source/universal-fs/tree/main"
   },
   docsRepositoryBase:
-    "https://github.com/eTech-Source/universal-fs/tree/canary/docs"
+    "https://github.com/eTech-Source/universal-fs/tree/canary/apps/docs"
 };
 
 export default config;
