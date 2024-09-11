@@ -1,5 +1,11 @@
 # universal-fs
 
+## 2.0.0
+
+### Major Changes
+
+- Add the ability to use all node fs methods
+
 ## 1.3.4
 
 ### Patch Changes
