@@ -1,5 +1,5 @@
 import express, {Express} from "express";
-import {isNode} from "browser-or-node";
+import {isBrowser, isNode} from "browser-or-node";
 import http from "http";
 import dotenv from "dotenv";
 
@@ -10,12 +10,12 @@ import dotenv from "dotenv";
  */
 export default class Server {
   /**
-   * The value of `express()` used to manipulate express before initiliation
+   * The value of `express()` used to manipulate express before initialization
    */
   private app: Express;
 
   /**
-   * The local port univerdal-fs is listening on
+   * The local port universal-fs is listening on
    * @default 3000
    */
   public port: number = 3000;
@@ -91,7 +91,7 @@ export default class Server {
   }
 
   /**
-   * Initilizes the server and api routes
+   * Initializes the server and api routes
    * @returns The url to the open Ngrok tunnel or the local port when port forwarding is disabled
    */
   public async init() {
@@ -133,7 +133,7 @@ export default class Server {
     this.port++;
     if (this.port > 3050) {
       console.warn(
-        "The server has already tried to start on 50 different ports. It is reccomended to open a port in the range of 3000 to 3050 for the best performance."
+        "The server has already tried to start on 50 different ports. It is recommended to open a port in the range of 3000 to 3050 for the best performance."
       );
     }
 
@@ -165,14 +165,11 @@ export default class Server {
         );
       }
 
-      console.log(this.port);
-
       url =
         (
           await ngrok.connect({
             addr: this.port,
-            authtoken: process.env.NGROK_AUTHTOKEN,
-            onLogEvent: (data) => console.log(data)
+            authtoken: process.env.NGROK_AUTHTOKEN
           })
         ).url() || "";
 
@@ -187,7 +184,7 @@ export default class Server {
   /**
    * An internal method for universal-fs file system methods
    * @param method The type of method eg: "readFile"
-   * @param args The arguments for the chosem method
+   * @param args The arguments for the chosen method
    * @returns The result of the calling the given method
    */
   private async method(method: string, args: unknown[]) {

@@ -14,7 +14,7 @@ const sendMethod = async (method: string, ...args: any[]) => {
     throw new Error(data.error || data);
   }
 
-  return data;
+  return data.data;
 };
 
 /**
@@ -149,8 +149,6 @@ export async function readFile(
 ): Promise<Buffer> {
   return await sendMethod("readFile", path, options);
 }
-
-console.log(await readFile("./package.json", {encoding: "utf8"}));
 
 /**
  * Reads the contents of a directory.

@@ -4,7 +4,7 @@ import {isBrowser, isNode} from "browser-or-node";
 import fs from "fs";
 
 /**
- * Initialize the connection to the relay server. Avabile in most JS environments
+ * Initialize the connection to the relay server. Available in most JS environments
  * @param url - The url of the relay server
  * @param password - The password to protect the files
  * @async
