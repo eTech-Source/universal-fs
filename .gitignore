@@ -8,7 +8,8 @@ dist
 .env
 
 # nx
-.nx
+.nx/cache
+.nx/workspace-data
 
 # macos
 .DS_Store
