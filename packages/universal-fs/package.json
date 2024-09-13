@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "pnpx rollup -cw && npx dts-bundle-generator ./index.ts --out-file dist/index.d.ts --no-check && pnpx nodemon dist/index.js",
-    "build": "pnpx rollup -c && npx dts-bundle-generator ./index.ts --out-file dist/index.d.ts --no-check"
+    "build": "pnpx rollup -c && npx dts-bundle-generator ./index.ts --out-file dist/index.d.ts --no-check",
+    "postinstall": "node scripts/postinstall.js"
   },
   "devDependencies": {
     "dts-bundle-generator": "^9.5.1",

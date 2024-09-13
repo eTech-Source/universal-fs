@@ -10,11 +10,14 @@ export default [
         format: "es"
       }
     ],
-
     inlineDynamicImports: true,
     presserveModules: true,
     plugins: [
-      typescript(),
+      typescript({
+        tsconfig: "../../tsconfig.json",
+        abortOnError: false,
+        check: false
+      }),
       copy({targets: [{src: "types/fs.d.ts", dest: "dist"}]})
     ],
     external: ["express", "bcrypt", "browser-or-node", "buffer", "dotenv"]
