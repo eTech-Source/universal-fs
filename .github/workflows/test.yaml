@@ -3,6 +3,9 @@ name: Run tests
 on:
   pull_request:
 
+env:
+  NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTHTOKEN }}
+  UNIVERSAL_FS_PASSWORD: ${{ secrets.UNIVERSAL_FS_PASSWORD }}
 jobs:
   test:
     runs-on: ubuntu-latest
