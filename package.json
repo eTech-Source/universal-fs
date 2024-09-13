@@ -16,7 +16,7 @@
     "test": "pnpx vitest"
   },
   "lint-staged": {
-    "*.{js,ts,tsx,astro,mjs,cjs,spec.ts,spec.tsx}": "eslint --cache --fix",
+    "*.{js,ts,tsx,astro,mjs,cjs,spec.ts,spec.tsx}": "eslint --cache --fix --no-error-on-unmatched-pattern",
     "*.{js,css,md,ts,tsx,astro,mjs,cjs}": "prettier --write --no-error-on-unmatched-pattern",
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write --no-error-on-unmatched-pattern"

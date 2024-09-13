@@ -25,4 +25,4 @@ jobs:
         run: pnpm install
 
       - name: Run eslint on changed files
-        run: npx eslint $(git diff --name-only HEAD | xargs)  
+        run: npx eslint $(git diff --name-only HEAD | xargs) --no-error-on-unmatched-pattern
