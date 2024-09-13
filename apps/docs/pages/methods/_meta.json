@@ -1,0 +1,106 @@
+{
+  "index": "What is a method?",
+  "exists": "exists",
+  "mkdir": "mkdir",
+  "readdir": "readdir",
+  "readFile": "readFile",
+  "rmdir": "rmdir",
+  "unlink": "unlink",
+  "writeFile": "writeFile",
+  "access-canary": {
+    "title": "access (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisesaccesspath-mode"
+  },
+  "lsat-canary": {
+    "title": "lstat (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromiseslstatpath-options"
+  },
+  "stat-canary": {
+    "title": "stat (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisesstatpath-options"
+  },
+  "readFile-canary": {
+    "title": "readFile (canary)",
+    "href": "https://nodejs.org/api/fs.html#filehandlereadfileoptions"
+  },
+  "readdir-canary": {
+    "title": "readdir (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisesreaddirpath-options"
+  },
+  "readlink-canary": {
+    "title": "readline (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisesreadlinkpath-options"
+  },
+  "realpath-canary": {
+    "title": "realpath (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisesrealpathpath-options"
+  },
+  "watch-canary": {
+    "title": "watch (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromiseswatchfilename-options"
+  },
+  "opendir-canary": {
+    "title": "opendir (canary)",
+    "href": "https://nodejs.org/api/fs.html#fsopendirpath-options-callback"
+  },
+  "chmod-canary": {
+    "title": "chmod (canary)",
+    "href": "https://nodejs.org/api/fs.html#fschmodpath-mode-callback"
+  },
+  "chown-canary": {
+    "title": "chown (canary)",
+    "href": "https://nodejs.org/api/fs.html#fschownpath-uid-gid-callback"
+  },
+  "lchown-canary": {
+    "title": "lchown (canary)",
+    "href": "https://nodejs.org/api/fs.html#fslchownpath-uid-gid-callback"
+  },
+  "utimes-canary": {
+    "title": "utimes (canary)",
+    "href": "https://nodejs.org/api/fs.html#fsutimespath-atime-mtime-callback"
+  },
+  "lutimes-canary": {
+    "title": "lutimes (canary)",
+    "href": "https://nodejs.org/api/fs.html#fslutimespath-atime-mtime-callback"
+  },
+  "truncate-canary": {
+    "title": "truncate (canary)",
+    "href": "https://nodejs.org/api/fs.html#filehandletruncatelen"
+  },
+  "writeFile-canary": {
+    "title": "writeFile (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromiseswritefilefile-data-options"
+  },
+  "appendFile-canary": {
+    "title": "appendFile (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisesappendfilepath-data-options"
+  },
+  "copyFile-canary": {
+    "title": "copyFile (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisescopyfilesrc-dest-mode"
+  },
+  "mkdir-canary": {
+    "title": "mkdir (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisesmkdirpath-options"
+  },
+  "mkdtemp-canary": {
+    "title": "mkdtemp (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisesmkdtempprefix-options"
+  },
+  "open-canary": {
+    "title": "open (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisesopenpath-flags-mode"
+  },
+  "symlink-canary": {
+    "title": "symlink (canary)",
+    "href": "https://nodejs.org/api/fs.html#fspromisessymlinktarget-path-type"
+  },
+  "link-canary": {
+    "title": "link (canary)",
+    "href": "https://nodejs.org/api/fs.html#fslinkexistingpath-newpath-callback"
+  },
+  "cp-canary": {
+    "title": "cp (canary)",
+    "href": "https://nodejs.org/api/fs.html#fscpsrc-dest-options-callback"
+  }
+}

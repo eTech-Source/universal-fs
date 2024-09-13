@@ -1,0 +1,62 @@
+# Getting started with universal-fs
+
+## Installation
+1. Run `npm install universal-fs`
+2. Create a `.env` file
+3. Enter any value for `UNIVERSAL_FS_PASSWORD` this will be hashed and used to protect your filesystem
+4. Signup for your [Ngrok](https://dashboard.ngrok.com/get-started/your-authtoken) token
+5. Copy the token as an environment variable in your `.env` named `NGROK_AUTHTOKEN`
+
+**Note:** you can skip steps 4 and 5 if you aren't going [Ngrok](/config/noNgrok).
+
+## In Node
+
+Simply call `init()` with `Server.init()` as a prop.
+
+```ts
+import {init, Server, readFile} from "universal-fs";
+
+const server = new Server();
+
+await init(await server.init());
+
+await readFile("index.ts");
+```
+
+## In the browser
+
+The browser is a little more difficult due to an inability to access `.env` or any server side functionality. Luckily this is what this library is made to solve.
+
+Below is the recommended approach; there are other ways to due this. Just make sure you don't leak your password 🥶:
+
+1. Create a route called `/api/fs-init` with following content. Note this example server uses Express you can use the framework of your choosing:
+
+```ts
+import {Server} from "universal-fs";
+
+app.get("/api/fs-init", async (req, res) => {
+  // Your custom auth code
+  const server = new Server();
+
+  const url = await server.init();
+  return res.json({
+    url,
+    token: encrypt(proccess.env.UNIVERSAL_FS_TOKEN as string) // use the encryption library of your choosing
+  });
+});
+```
+
+**Note this endpoint should not be public!**
+
+2. Call the init function in the browser
+
+```ts
+import {init, readFile} from "universal-fs";
+
+const res = await fetch("/api/fs-init");
+const data = await res.json();
+
+await init(data.url, decrypt(data.token));
+
+await readFile("index.html");
+```

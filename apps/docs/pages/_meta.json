@@ -1,0 +1,11 @@
+{
+  "index": "Introduction",
+  "setup": "Getting started",
+  "methods": "Methods",
+  "config": "Configuring universal-fs",
+  "node_fs_docs": {
+    "title": "Node fs docs",
+    "href": "https://nodejs.org/api/fs.html",
+    "newWindow": true
+  }
+}

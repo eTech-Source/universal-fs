@@ -17,6 +17,6 @@
       "skipDefaultLibCheck": true,
       "declaration": true
     },
-    "include": ["src/", "types/"],
-    "exclude": ["eslint.config.js"]
+    "include": ["src/", "packages/universal-fs/types", "packages/universal-fs/server", "packages/universal-fs/index.ts", "packages/universal-fs/client", "packages/universal-fs/helpers", "packages/universal-fs/tests/browser"],
+    "exclude": ["eslint.config.cjs"]
   }
