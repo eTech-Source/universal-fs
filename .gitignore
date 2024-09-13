@@ -1,16 +1,3 @@
-# generation
 node_modules
-dist
-.next
-
-# secrets
-.fs
 .env
-
-# nx
-.nx/cache
-.nx/workspace-data
-
-# macos
-.DS_Store
-.vercel
+.fs
