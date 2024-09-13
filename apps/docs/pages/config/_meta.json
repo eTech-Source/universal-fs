@@ -1,5 +1,0 @@
-{
-    "noNgrok": "Usage without Ngrok",
-    "unprotected": "Using universal-fs without a password",
-    "relayServer": "How to use the universal-fs relay server API"
-}
