@@ -1,4 +1,16 @@
+import Canary from "../../components/Canary";
+
+# Usage without Ngrok <Canary />
+
+To disable Ngrok simply pass `false` to `withPortForwarding` in the `Server` class.
+
+```ts
+const server = new Server({withPortForwarding: false})
+```
+
 # Usage without Ngrok
+
+**Note:** This is now deprecated in <Canary /> versions and may be removed soon.
 
 As of universal-fs v1.1.0 you can use your own server with your own custom url for universal-fs with all the same benefits.
 

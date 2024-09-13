@@ -1,3 +1,124 @@
+import Canary from "../../components/Canary";
+
+# How to use the universal-fs relay server API <Canary />
+
+## Obtaining the url and token
+
+### In the browser
+
+Get two cookies one named `universal-fs-url`, and the other `universal-fs-token`.
+
+### In Node
+
+Read two files `.fs/url.txt` and `.fs/token.txt`
+
+_Tip: to get the url and the token you can use the internal helpers [`getToken()`](https://github.com/eTech-Source/universal-fs/tree/canary/packages/universal-fs/helpers/getToken.ts) and [`getUrl()`](https://github.com/eTech-Source/universal-fs/tree/canary/packages/universal-fs/helpers/getUrl.ts)_
+
+## Making requests
+
+There are four things you need to figure out when making requests to the new api:
+
+- The HTTP method type
+- The fs method
+- The path to act on
+- The options for the fs method
+
+### Choosing an HTTP method type
+
+universal-fs supports the following types `GET | POST | PUT | DELETE`.
+
+#### `GET` methods
+
+- `access`
+- `lstat`
+- `stat`
+- `statfs`
+- `readFile`
+- `readdir`
+- `readlink`
+- `realpath`
+- `watch`
+- `opendir`
+- `glob`
+- `constants`
+
+#### `POST` methods
+
+- `mkdir`
+- `mkdtemp`
+- `open`
+- `symlink`
+- `link`
+- `copyFile`
+- `cp`
+
+#### `PUT` methods
+
+- `chmod`
+- `chown`
+- `lchmod`
+- `lchown`
+- `utimes`
+- `lutimes`
+- `truncate`
+- `writeFile`
+- `appendFile`
+
+#### `DELETE` methods
+
+- `rmdir`
+- `unlink`
+- `rename`
+
+### The fs method
+
+All valid fs methods are listed above. Simply pass them as a header in your fetch requests:
+
+```ts
+const response = await fetch(`${await getUrl()}/fs`, {
+  headers: {
+    method: "readFile"
+  }
+});
+```
+
+#### The file path
+
+This should be passed as an option in your `args` header. Please not that universal-fs runs in the [current working directory](https://stackoverflow.com/a/66860904/19019306).
+
+```ts
+const response = await fetch(`${await getUrl()}/fs`, {
+  headers: {
+    method: "readFile",
+    args: ["./package.json"]
+  }
+});
+```
+
+#### The options for the fs method
+
+All other arguments should be passed as an `args` header:
+
+```ts
+const response = await fetch(`${await getUrl()}/fs`, {
+  headers: {
+    method: "readFile",
+    args: [..., {encoding: "utf8"}]
+  }
+});
+```
+
+In total here is an example request:
+
+```ts
+const response = await fetch(`${await getUrl()}/fs`, {
+  headers: {
+    method: "readFile",
+    args: ["./package.json", {encoding: "utf8"}]
+  }
+});
+```
+
 # How to use the universal-fs relay server API
 
 ## Obtaining the url and token

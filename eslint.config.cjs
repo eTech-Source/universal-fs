@@ -12,6 +12,7 @@ module.exports = [
     languageOptions: {
       parser: typescriptParser
     },
+    ignores: [".nx/**"],
     plugins: {
       typescript
     },
