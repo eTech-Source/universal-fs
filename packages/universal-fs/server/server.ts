@@ -1,5 +1,5 @@
 import express, {Express} from "express";
-import {isBrowser, isNode} from "browser-or-node";
+import {isNode} from "browser-or-node";
 import http from "http";
 import dotenv from "dotenv";
 
