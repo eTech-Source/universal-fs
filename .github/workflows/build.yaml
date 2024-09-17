@@ -1,9 +1,8 @@
 name: Build and publish the npm package
 
 on:
-  pull_request:
+  push:
     branches: [main, canary]
-    types: [closed]
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
