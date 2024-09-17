@@ -1,0 +1,36 @@
+name: Build and publish the npm package
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build the package
+        run: pnpm build
+
+      - name: Publish to npm if the version has changed
+        run: node build/publish.mjs main ${{ github.head_ref || github.ref_name }} ${{ github.event.pull_request.body }}

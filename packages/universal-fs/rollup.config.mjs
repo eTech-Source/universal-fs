@@ -6,19 +6,16 @@ export default [
     input: "index.ts",
     output: [
       {
-        dir: "dist",
+        dir: "../../dist",
         format: "es"
       }
     ],
+
     inlineDynamicImports: true,
     presserveModules: true,
     plugins: [
-      typescript({
-        tsconfig: "../../tsconfig.json",
-        abortOnError: false,
-        check: false
-      }),
-      copy({targets: [{src: "types/fs.d.ts", dest: "dist"}]})
+      typescript(),
+      copy({targets: [{src: "types/fs.d.ts", dest: "../../dist"}]})
     ],
     external: ["express", "bcrypt", "browser-or-node", "buffer", "dotenv"]
   }
