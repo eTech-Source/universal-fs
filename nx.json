@@ -1,20 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "targetDefaults": {
-    "dev": {
-      "outputs": [
-        "{projectRoot}/packages/universal-fs/dist"
-      ],
-      "cache": true
-    }
-  },
-  "defaultBase": "main",
-  "nxCloudAccessToken": "ZjY5ZDZjYjctOTBmZC00ZWM4LWJjOTYtZWQ4NmRjNDIxMzI0fHJlYWQtd3JpdGU=",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "nx-cloud",
+      "runner": "nx/tasks-runners/default",
       "options": {
-        "accessToken": "OTRlMDNiZTUtYjI3Yi00YmIzLWEzY2MtNjk3M2RmYmEzODMzfHJlYWQtd3JpdGU="
+        "cacheableOperations": ["build", "lint", "test"]
       }
     }
   }
