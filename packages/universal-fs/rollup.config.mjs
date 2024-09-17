@@ -6,7 +6,7 @@ export default [
     input: "index.ts",
     output: [
       {
-        dir: "dist",
+        dir: "../../dist",
         format: "es"
       }
     ],
@@ -15,7 +15,7 @@ export default [
     presserveModules: true,
     plugins: [
       typescript(),
-      copy({targets: [{src: "types/fs.d.ts", dest: "dist"}]})
+      copy({targets: [{src: "types/fs.d.ts", dest: "../../dist"}]})
     ],
     external: ["express", "bcrypt", "browser-or-node", "buffer", "dotenv"]
   }

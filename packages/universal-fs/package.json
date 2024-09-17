@@ -1,15 +1,14 @@
 {
   "name": "universal-fs",
-  "version": "2.0.0-canary-1",
+  "version": "2.0.0-canary-2",
   "description": "Allows a client or server to access the file system in the current codebase or a different one.",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "pnpx rollup -cw && npx dts-bundle-generator ./index.ts --out-file dist/index.d.ts --no-check && pnpx nodemon dist/index.js",
-    "build": "pnpx rollup -c && npx dts-bundle-generator ./index.ts --out-file dist/index.d.ts --no-check"
+    "dev": "pnpx rollup -cw && pnpx nodemon && ../../dist/index.js",
+    "build": "pnpx rollup -c && node ../../build/copy.mjs"
   },
   "devDependencies": {
-    "dts-bundle-generator": "^9.5.1",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-typescript2": "^0.36.0"
   },
