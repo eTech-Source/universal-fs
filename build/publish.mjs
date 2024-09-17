@@ -7,7 +7,7 @@ import pacote from "pacote";
 dotenv.config();
 
 const publishPkg = async (baseBranch, currentBranch, prContents) => {
-  if (prContents.contians("!skip-publish")) {
+  if (typeof prContents === "string" && prContents.includes("!skip-publish")) {
     console.log("Skipping publish");
     return;
   }
