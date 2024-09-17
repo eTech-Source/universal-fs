@@ -9,5 +9,13 @@
     }
   },
   "defaultBase": "main",
-  "nxCloudAccessToken": "ZjY5ZDZjYjctOTBmZC00ZWM4LWJjOTYtZWQ4NmRjNDIxMzI0fHJlYWQtd3JpdGU="
+  "nxCloudAccessToken": "ZjY5ZDZjYjctOTBmZC00ZWM4LWJjOTYtZWQ4NmRjNDIxMzI0fHJlYWQtd3JpdGU=",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx-cloud",
+      "options": {
+        "accessToken": "OTRlMDNiZTUtYjI3Yi00YmIzLWEzY2MtNjk3M2RmYmEzODMzfHJlYWQtd3JpdGU="
+      }
+    }
+  }
 }
