@@ -1,7 +1,8 @@
 name: Build and publish the npm package
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches: [main, canary]
 
 env:
@@ -32,4 +33,5 @@ jobs:
         run: pnpm build
 
       - name: Publish to npm if the version has changed
-        run: node build/publish.mjs main ${{ github.head_ref || github.ref_name }} ${{ github.event.pull_request.body }}
+        run: node build/publish.mjs main ${{ github.head_ref || github.ref_name }}
+        if: ${{ github.event.pull_request.merged == true }}

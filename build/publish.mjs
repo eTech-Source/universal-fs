@@ -6,12 +6,7 @@ import pacote from "pacote";
 
 dotenv.config();
 
-const publishPkg = async (baseBranch, currentBranch, prContents) => {
-  if (typeof prContents === "string" && prContents.includes("!skip-publish")) {
-    console.log("Skipping publish");
-    return;
-  }
-
+const publishPkg = async (baseBranch, currentBranch) => {
   const githubToken = process.env.GITHUB_TOKEN;
   const reqHeader = {
     "Authorization": `Bearer ${githubToken}`,
@@ -57,4 +52,4 @@ const publishPkg = async (baseBranch, currentBranch, prContents) => {
   }
 };
 
-publishPkg(process.argv[2], process.argv[3], process.argv[4]);
+publishPkg(process.argv[2], process.argv[3]);
