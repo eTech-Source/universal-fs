@@ -1,6 +1,6 @@
 {
   "name": "universal-fs",
-  "version": "2.0.0-canary-3",
+  "version": "2.0.0-canary-4",
   "description": "Allows a client or server to access the file system in the current codebase or a different one.",
   "type": "module",
   "scripts": {
