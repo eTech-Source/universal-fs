@@ -27,3 +27,4 @@ const init = async (url: string, password?: string, isProtected?: boolean) => {
 };
 
 export {init, Server, auth};
+export * from "./client/method";
